@@ -1,0 +1,805 @@
+const curatedPaperCatalog = [
+  {
+    "title": "ACE: Off-Policy Actor-Critic with Causality-Aware Entropy Regularization",
+    "authors": [
+      "Tianying Ji",
+      "Yongyuan Liang",
+      "Yan Zeng",
+      "Yu Luo",
+      "Guowei Xu",
+      "Jiawei Guo",
+      "Ruijie Zheng",
+      "Furong Huang",
+      "Fuchun Sun",
+      "Huazhe Xu"
+    ],
+    "year": 2024,
+    "venue": "ICML 2024 (Oral)",
+    "doi": "arXiv:2402.14528",
+    "url": "https://arxiv.org/abs/2402.14528"
+  },
+  {
+    "title": "APT: Action Expert Pretraining Improves Instruction Generalization of Vision-Language-Action Policies",
+    "authors": [
+      "Kechun Xu",
+      "Zhenjie Zhu",
+      "Anzhe Chen",
+      "Rong Xiong",
+      "Yue Wang"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2606.12366",
+    "url": "https://arxiv.org/abs/2606.12366"
+  },
+  {
+    "title": "Being-H0.5: Scaling Human-Centric Robot Learning for Cross-Embodiment Generalization",
+    "authors": [
+      "Hao Luo",
+      "Ye Wang",
+      "Wanpeng Zhang",
+      "Sipeng Zheng",
+      "Ziheng Xi",
+      "Chaoyi Xu",
+      "Haiweng Xu",
+      "Haoqi Yuan",
+      "Chi Zhang",
+      "Yiqing Wang",
+      "Yicheng Feng",
+      "Zongqing Lu"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2601.12993",
+    "url": "https://arxiv.org/abs/2601.12993"
+  },
+  {
+    "title": "Being-H0.7: A Latent World-Action Model from Egocentric Videos",
+    "authors": [
+      "Hao Luo",
+      "Wanpeng Zhang",
+      "Yicheng Feng",
+      "Sipeng Zheng",
+      "Haiweng Xu",
+      "Chaoyi Xu",
+      "Ziheng Xi",
+      "Yuhui Fu",
+      "Zongqing Lu"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2605.00078",
+    "url": "https://arxiv.org/abs/2605.00078"
+  },
+  {
+    "title": "Bridging the Morphology Gap: Adapting VLA Models to Dexterous Manipulation via Intent-Conditioned Fine-Tuning",
+    "authors": [
+      "Chuanke Pang",
+      "Junyi Huang",
+      "Zhijun Zhao",
+      "Yaobing Wang",
+      "Kun Xu",
+      "Xilun Ding"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2606.12109",
+    "url": "https://arxiv.org/abs/2606.12109"
+  },
+  {
+    "title": "CAIMAN: Causal Action Influence Detection for Sample Efficient Loco-manipulation",
+    "authors": [
+      "Yuanchen Yuan",
+      "Jin Cheng",
+      "Núria Armengol Urpí",
+      "Stelian Coros"
+    ],
+    "year": 2025,
+    "venue": "CoRL 2025 Workshop",
+    "doi": "arXiv:2502.00835",
+    "url": "https://arxiv.org/abs/2502.00835"
+  },
+  {
+    "title": "CDL: Causal Dynamics Learning for Task-Independent State Abstraction",
+    "authors": [
+      "Zizhao Wang",
+      "Xuesu Xiao",
+      "Zifan Xu",
+      "Yuke Zhu",
+      "Peter Stone"
+    ],
+    "year": 2022,
+    "venue": "ICML 2022",
+    "doi": "arXiv:2206.13452",
+    "url": "https://arxiv.org/abs/2206.13452"
+  },
+  {
+    "title": "CIP: Causal Information Prioritization for Efficient Reinforcement Learning",
+    "authors": [
+      "Hongye Cao",
+      "Fan Feng",
+      "Tianpei Yang",
+      "Jing Huo",
+      "Yang Gao"
+    ],
+    "year": 2025,
+    "venue": "ICLR 2025",
+    "doi": "arXiv:2502.10097",
+    "url": "https://arxiv.org/abs/2502.10097"
+  },
+  {
+    "title": "Curiosity-Driven Learning of Joint Locomotion and Manipulation Tasks",
+    "authors": [
+      "Clemens Schwarke",
+      "Victor Klemm",
+      "Matthijs van der Boon",
+      "Marko Bjelonic",
+      "Marco Hutter"
+    ],
+    "year": 2023,
+    "venue": "CoRL 2023",
+    "doi": "PMLR 229:2594–2610",
+    "url": "https://proceedings.mlr.press/v229/schwarke23a.html"
+  },
+  {
+    "title": "DIAYN: Diversity Is All You Need (Learning Skills without a Reward Function)",
+    "authors": [
+      "Benjamin Eysenbach",
+      "Abhishek Gupta",
+      "Julian Ibarz",
+      "Sergey Levine"
+    ],
+    "year": 2019,
+    "venue": "ICLR 2019",
+    "doi": "arXiv:1802.06070",
+    "url": "https://arxiv.org/abs/1802.06070"
+  },
+  {
+    "title": "DreamGen: Unlocking Generalization in Robot Learning through Video World Models",
+    "authors": [
+      "Joel Jang",
+      "Seonghyeon Ye",
+      "Zongyu Lin",
+      "Jiannan Xiang",
+      "Johan Bjorck",
+      "Yu Fang",
+      "Fengyuan Hu",
+      "Spencer Huang",
+      "Kaushil Kundalia",
+      "Yen-Chen Lin",
+      "Loic Magne",
+      "Ajay Mandlekar",
+      "Avnish Narayan",
+      "You Liang Tan",
+      "Guanzhi Wang",
+      "Jing Wang",
+      "Qi Wang",
+      "Yinzhen Xu",
+      "Xiaohui Zeng",
+      "Kaiyuan Zheng",
+      "Ruijie Zheng",
+      "Ming-Yu Liu",
+      "Luke Zettlemoyer",
+      "Dieter Fox",
+      "Jan Kautz",
+      "Scott Reed",
+      "Yuke Zhu",
+      "Linxi Fan"
+    ],
+    "year": 2025,
+    "venue": "CoRL 2025",
+    "doi": "arXiv:2505.12705",
+    "url": "https://arxiv.org/abs/2505.12705"
+  },
+  {
+    "title": "DSRL: Steering Your Diffusion Policy with Latent Space Reinforcement Learning",
+    "authors": [
+      "Andrew Wagenmaker",
+      "Mitsuhiko Nakamoto",
+      "Yunchu Zhang",
+      "Seohong Park",
+      "Waleed Yagoub",
+      "Anusha Nagabandi",
+      "Abhishek Gupta",
+      "Sergey Levine"
+    ],
+    "year": 2025,
+    "venue": "CoRL 2025",
+    "doi": "arXiv:2506.15799",
+    "url": "https://arxiv.org/abs/2506.15799"
+  },
+  {
+    "title": "DUSDi: Disentangled Unsupervised Skill Discovery for Efficient Hierarchical Reinforcement Learning",
+    "authors": [
+      "Jiaheng Hu",
+      "Zizhao Wang",
+      "Peter Stone",
+      "Roberto Martín-Martín"
+    ],
+    "year": 2024,
+    "venue": "NeurIPS 2024",
+    "doi": "arXiv:2410.11251",
+    "url": "https://arxiv.org/abs/2410.11251"
+  },
+  {
+    "title": "DynaMo: In-Domain Dynamics Pretraining for Visuo-Motor Control",
+    "authors": [
+      "Zichen Jeff Cui",
+      "Hengkai Pan",
+      "Aadhithya Iyer",
+      "Siddhant Haldar",
+      "Lerrel Pinto"
+    ],
+    "year": 2024,
+    "venue": "NeurIPS 2024",
+    "doi": "arXiv:2409.12192",
+    "url": "https://arxiv.org/abs/2409.12192"
+  },
+  {
+    "title": "Efficient Manipulation-Enhanced Semantic Mapping With Uncertainty-Informed Action Selection",
+    "authors": [
+      "Nils Dengler",
+      "Jesper Mücke",
+      "Rohit Menon",
+      "Maren Bennewitz"
+    ],
+    "year": 2025,
+    "venue": "Humanoids 2025",
+    "doi": "arXiv:2506.02286",
+    "url": "https://arxiv.org/abs/2506.02286"
+  },
+  {
+    "title": "Estimating Risk and Uncertainty in Deep Reinforcement Learning",
+    "authors": [
+      "William R. Clements",
+      "Bastien Van Delft",
+      "Benoît-Marie Robaglia",
+      "Reda Bahi Slaoui",
+      "Sébastien Toth"
+    ],
+    "year": 2020,
+    "venue": "ICML 2020 Workshop",
+    "doi": "arXiv:1905.09638",
+    "url": "https://arxiv.org/abs/1905.09638"
+  },
+  {
+    "title": "FLARE: Robot Learning with Implicit World Modeling",
+    "authors": [
+      "Ruijie Zheng",
+      "Jing Wang",
+      "Scott Reed",
+      "Johan Bjorck",
+      "Yu Fang",
+      "Fengyuan Hu",
+      "Joel Jang",
+      "Kaushil Kundalia",
+      "Zongyu Lin",
+      "Loic Magne",
+      "Avnish Narayan",
+      "You Liang Tan",
+      "Guanzhi Wang",
+      "Qi Wang",
+      "Jiannan Xiang",
+      "Yinzhen Xu",
+      "Seonghyeon Ye",
+      "Jan Kautz",
+      "Furong Huang",
+      "Yuke Zhu",
+      "Linxi Fan"
+    ],
+    "year": 2025,
+    "venue": "CoRL 2025",
+    "doi": "arXiv:2505.15659",
+    "url": "https://arxiv.org/abs/2505.15659"
+  },
+  {
+    "title": "Flow Matching Policy Gradients",
+    "authors": [
+      "David McAllister",
+      "Songwei Ge",
+      "Brent Yi",
+      "Chung Min Kim",
+      "Ethan Weber",
+      "Hongsuk Choi",
+      "Haiwen Feng",
+      "Angjoo Kanazawa"
+    ],
+    "year": 2026,
+    "venue": "ICLR 2026",
+    "doi": "arXiv:2507.21053",
+    "url": "https://arxiv.org/abs/2507.21053"
+  },
+  {
+    "title": "From Intention to Execution: Probing the Generalization Boundaries of Vision-Language-Action Models",
+    "authors": [
+      "Irving Fang",
+      "Juexiao Zhang",
+      "Shengbang Tong",
+      "Chen Feng"
+    ],
+    "year": 2025,
+    "venue": "Preprint (arXiv, under review)",
+    "doi": "arXiv:2506.09930",
+    "url": "https://arxiv.org/abs/2506.09930"
+  },
+  {
+    "title": "GENE-26.5: Advancing Robotic Manipulation to Human Level",
+    "authors": [
+      "Genesis AI Team"
+    ],
+    "year": 2026,
+    "venue": "Technical Report (Genesis AI)",
+    "doi": "",
+    "url": "https://www.genesis.ai/blog/gene-26-5-advancing-robotic-manipulation-to-human-level"
+  },
+  {
+    "title": "Genie: Generative Interactive Environments",
+    "authors": [
+      "Jake Bruce",
+      "Michael Dennis",
+      "Ashley Edwards",
+      "Jack Parker-Holder",
+      "Yuge Shi",
+      "Edward Hughes",
+      "Matthew Lai",
+      "Aditi Mavalankar",
+      "Richie Steigerwald",
+      "Chris Apps",
+      "Yusuf Aytar",
+      "Sarah Bechtle",
+      "Feryal Behbahani",
+      "Stephanie Chan",
+      "Nicolas Heess",
+      "Lucy Gonzalez",
+      "Simon Osindero",
+      "Sherjil Ozair",
+      "Scott Reed",
+      "Jingwei Zhang",
+      "Konrad Zolna",
+      "Jeff Clune",
+      "Nando de Freitas",
+      "Satinder Singh",
+      "Tim Rocktäschel"
+    ],
+    "year": 2024,
+    "venue": "ICML 2024",
+    "doi": "arXiv:2402.15391",
+    "url": "https://arxiv.org/abs/2402.15391"
+  },
+  {
+    "title": "Guided Reinforcement Learning for Robust Multi-Contact Loco-Manipulation",
+    "authors": [
+      "Jean-Pierre Sleiman",
+      "Mayank Mittal",
+      "Marco Hutter"
+    ],
+    "year": 2024,
+    "venue": "CoRL 2024 (Oral)",
+    "doi": "arXiv:2410.13817",
+    "url": "https://arxiv.org/abs/2410.13817"
+  },
+  {
+    "title": "HumanoidGen: Data Generation for Bimanual Dexterous Manipulation via LLM Reasoning",
+    "authors": [
+      "Zhi Jing",
+      "Siyuan Yang",
+      "Jicong Ao",
+      "Ting Xiao",
+      "Yu-Gang Jiang",
+      "Chenjia Bai"
+    ],
+    "year": 2025,
+    "venue": "NeurIPS 2025",
+    "doi": "arXiv:2507.00833",
+    "url": "https://arxiv.org/abs/2507.00833"
+  },
+  {
+    "title": "Improving Vision-Language-Action Model with Online Reinforcement Learning",
+    "authors": [
+      "Yanjiang Guo",
+      "Jianke Zhang",
+      "Xiaoyu Chen",
+      "Xiang Ji",
+      "Yen-Jen Wang",
+      "Yucheng Hu",
+      "Jianyu Chen"
+    ],
+    "year": 2025,
+    "venue": "ICRA 2025",
+    "doi": "arXiv:2501.16664",
+    "url": "https://arxiv.org/abs/2501.16664"
+  },
+  {
+    "title": "LAPA: Latent Action Pretraining From Videos",
+    "authors": [
+      "Seonghyeon Ye",
+      "Joel Jang",
+      "Byeongguk Jeon",
+      "Sejune Joo",
+      "Jianwei Yang",
+      "Baolin Peng",
+      "Ajay Mandlekar",
+      "Reuben Tan",
+      "Yu-Wei Chao",
+      "Bill Yuchen Lin",
+      "Lars Liden",
+      "Kimin Lee",
+      "Jianfeng Gao",
+      "Luke Zettlemoyer",
+      "Dieter Fox",
+      "Minjoon Seo"
+    ],
+    "year": 2025,
+    "venue": "ICLR 2025",
+    "doi": "arXiv:2410.11758",
+    "url": "https://arxiv.org/abs/2410.11758"
+  },
+  {
+    "title": "LAPO: Learning to Act Without Actions",
+    "authors": [
+      "Dominik Schmidt",
+      "Minqi Jiang"
+    ],
+    "year": 2024,
+    "venue": "ICLR 2024 (Spotlight)",
+    "doi": "arXiv:2312.10812",
+    "url": "https://arxiv.org/abs/2312.10812"
+  },
+  {
+    "title": "Latent Policy Barrier: Learning Robust Visuomotor Policies by Staying In-Distribution",
+    "authors": [
+      "Zhanyi Sun",
+      "Shuran Song"
+    ],
+    "year": 2025,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2508.05941",
+    "url": "https://arxiv.org/abs/2508.05941"
+  },
+  {
+    "title": "Learning Risk-Aware Quadrupedal Locomotion using Distributional Reinforcement Learning",
+    "authors": [
+      "Lukas Schneider",
+      "Jonas Frey",
+      "Takahiro Miki",
+      "Marco Hutter"
+    ],
+    "year": 2024,
+    "venue": "ICRA 2024",
+    "doi": "arXiv:2309.14246",
+    "url": "https://arxiv.org/abs/2309.14246"
+  },
+  {
+    "title": "Mimic Intent, Not Just Trajectories",
+    "authors": [
+      "Renming Huang",
+      "Chendong Zeng",
+      "Wenjing Tang",
+      "Jintian Cai",
+      "Cewu Lu",
+      "Panpan Cai"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2602.08602",
+    "url": "https://arxiv.org/abs/2602.08602"
+  },
+  {
+    "title": "RL Token: Bootstrapping Online RL with Vision-Language-Action Models",
+    "authors": [
+      "Charles Xu",
+      "Jost Tobias Springenberg",
+      "Michael Equi",
+      "Ali Amin",
+      "Adnan Esmail",
+      "Sergey Levine",
+      "Liyiming Ke"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2604.23073",
+    "url": "https://arxiv.org/abs/2604.23073"
+  },
+  {
+    "title": "RLDX-1 Technical Report",
+    "authors": [
+      "Dongyoung Kim",
+      "Huiwon Jang",
+      "Myungkyu Koo",
+      "Suhyeok Jang",
+      "Taeyoung Kim",
+      "Beomjun Kim",
+      "Byungjun Yoon",
+      "Changsung Jang",
+      "Daewon Choi",
+      "Dongsu Han",
+      "Donguk Lee",
+      "Heeseung Kwon",
+      "Hojin Jeon",
+      "Jaehyun Kang",
+      "Jaekyoung Bae",
+      "Jihyuk Lee",
+      "Jimin Lee",
+      "John Won",
+      "Joonwoo Ahn",
+      "Junhyeong Park",
+      "Junyoung Sung",
+      "Kyungmin Lee",
+      "Minseong Han",
+      "Minsung Yoon",
+      "Sejune Joo",
+      "Seonil Son",
+      "Seungcheol Park",
+      "Seunggeun Cho",
+      "Seungjun Moon",
+      "Seungku Kim",
+      "Yonghoon Dong",
+      "Yongjin Cho",
+      "Youngchan Kim",
+      "Chang Hwan Kim",
+      "Dohyeon Kim",
+      "Heecheol Kim",
+      "Heewon Lee",
+      "Hensen Ahn",
+      "Hyungkyu Ryu",
+      "Hyunsoo Choi",
+      "Hyunsoo Shin",
+      "Jaeheon Jung",
+      "Jaewoo Kim",
+      "Jinwook Kim",
+      "Joochul Chang",
+      "Joonsoo Kim",
+      "Junghun Park",
+      "Jungwoo Park",
+      "Junho Cho",
+      "Junhyeok Park",
+      "Junwon Lee",
+      "Kangwook Lee",
+      "Kwanghoon Kim",
+      "Kyoungwhan Choe",
+      "Manoj Bhadu",
+      "Nayoung Oh",
+      "Sangjun Kim",
+      "Sangwoo Kim",
+      "Seunghoon Shim",
+      "Seunghyun Kim",
+      "Seungjun Lee",
+      "Seungyup Ka",
+      "Sungryol Yang",
+      "Wook Jung",
+      "Yashu Shukla",
+      "Yeonjae Lee",
+      "Yeonwoo Bae",
+      "Jinwoo Shin"
+    ],
+    "year": 2026,
+    "venue": "Technical Report",
+    "doi": "arXiv:2605.03269",
+    "url": "https://arxiv.org/abs/2605.03269"
+  },
+  {
+    "title": "SimpleVLA-RL: Scaling VLA Training via Reinforcement Learning",
+    "authors": [
+      "Haozhan Li",
+      "Yuxin Zuo",
+      "Jiale Yu",
+      "Yuhao Zhang",
+      "Zhaohui Yang",
+      "Kaiyan Zhang",
+      "Xuekai Zhu",
+      "Yuchen Zhang",
+      "Tianxing Chen",
+      "Ganqu Cui",
+      "Dehui Wang",
+      "Dingxiang Luo",
+      "Yuchen Fan",
+      "Youbang Sun",
+      "Jia Zeng",
+      "Jiangmiao Pang",
+      "Shanghang Zhang",
+      "Yu Wang",
+      "Yao Mu",
+      "Bowen Zhou",
+      "Ning Ding"
+    ],
+    "year": 2026,
+    "venue": "ICLR 2026",
+    "doi": "arXiv:2509.09674",
+    "url": "https://arxiv.org/abs/2509.09674"
+  },
+  {
+    "title": "Simulation Distillation: Pretraining World Models in Simulation for Rapid Real-World Adaptation",
+    "authors": [
+      "Jacob Levy",
+      "Tyler Westenbroek",
+      "Kevin Huang",
+      "Fernando Palafox",
+      "Patrick Yin",
+      "Shayegan Omidshafiei",
+      "Dong-Ki Kim",
+      "Abhishek Gupta",
+      "David Fridovich-Keil"
+    ],
+    "year": 2026,
+    "venue": "RSS 2026",
+    "doi": "arXiv:2603.15759",
+    "url": "https://arxiv.org/abs/2603.15759"
+  },
+  {
+    "title": "SkiLD: Unsupervised Skill Discovery Guided by Factor Interactions",
+    "authors": [
+      "Zizhao Wang",
+      "Jiaheng Hu",
+      "Caleb Chuck",
+      "Stephen Chen",
+      "Roberto Martín-Martín",
+      "Amy Zhang",
+      "Scott Niekum",
+      "Peter Stone"
+    ],
+    "year": 2024,
+    "venue": "NeurIPS 2024",
+    "doi": "arXiv:2410.18416",
+    "url": "https://arxiv.org/abs/2410.18416"
+  },
+  {
+    "title": "SLAC: Simulation-Pretrained Latent Action Space for Whole-Body Real-World RL",
+    "authors": [
+      "Jiaheng Hu",
+      "Peter Stone",
+      "Roberto Martín-Martín"
+    ],
+    "year": 2025,
+    "venue": "CoRL 2025",
+    "doi": "arXiv:2506.04147",
+    "url": "https://arxiv.org/abs/2506.04147"
+  },
+  {
+    "title": "SpatialPIN: Enhancing Spatial Reasoning Capabilities of Vision-Language Models through Prompting and Interacting 3D Priors",
+    "authors": [
+      "Chenyang Ma",
+      "Kai Lu",
+      "Ta-Ying Cheng",
+      "Niki Trigoni",
+      "Andrew Markham"
+    ],
+    "year": 2024,
+    "venue": "NeurIPS 2024",
+    "doi": "arXiv:2403.13438",
+    "url": "https://arxiv.org/abs/2403.13438"
+  },
+  {
+    "title": "SpatialVLA: Exploring Spatial Representations for Visual-Language-Action Model",
+    "authors": [
+      "Delin Qu",
+      "Haoming Song",
+      "Qizhi Chen",
+      "Yuanqi Yao",
+      "Xinyi Ye",
+      "Yan Ding",
+      "Zhigang Wang",
+      "JiaYuan Gu",
+      "Bin Zhao",
+      "Dong Wang",
+      "Xuelong Li"
+    ],
+    "year": 2025,
+    "venue": "RSS 2025",
+    "doi": "arXiv:2501.15830",
+    "url": "https://arxiv.org/abs/2501.15830"
+  },
+  {
+    "title": "Task Reconstruction and Extrapolation for π₀ using Text Latent",
+    "authors": [
+      "Quanyi Li"
+    ],
+    "year": 2025,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2505.03500",
+    "url": "https://arxiv.org/abs/2505.03500"
+  },
+  {
+    "title": "TICSA: Task-Independent Causal State Abstraction",
+    "authors": [
+      "Zizhao Wang",
+      "Xuesu Xiao",
+      "Yuke Zhu",
+      "Peter Stone"
+    ],
+    "year": 2021,
+    "venue": "NeurIPS 2021 Workshop",
+    "doi": "",
+    "url": "https://www.cs.utexas.edu/~xiao/papers/ticsa.pdf"
+  },
+  {
+    "title": "TwinBrainVLA: Unleashing the Potential of Generalist VLMs for Embodied Tasks via Asymmetric Mixture-of-Transformers",
+    "authors": [
+      "Bin Yu",
+      "Shijie Lian",
+      "Xiaopeng Lin",
+      "Yuliang Wei",
+      "Zhaolong Shen",
+      "Changti Wu",
+      "Yuzhuo Miao",
+      "Xinming Wang",
+      "Bailing Wang",
+      "Cong Huang",
+      "Kai Chen"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2601.14133",
+    "url": "https://arxiv.org/abs/2601.14133"
+  },
+  {
+    "title": "UniVLA: Learning to Act Anywhere with Task-centric Latent Actions",
+    "authors": [
+      "Qingwen Bu",
+      "Yanting Yang",
+      "Jisong Cai",
+      "Shenyuan Gao",
+      "Guanghui Ren",
+      "Maoqing Yao",
+      "Ping Luo",
+      "Hongyang Li"
+    ],
+    "year": 2025,
+    "venue": "RSS 2025",
+    "doi": "arXiv:2505.06111",
+    "url": "https://arxiv.org/abs/2505.06111"
+  },
+  {
+    "title": "Visual Adversarial Examples Jailbreak Aligned Large Language Models",
+    "authors": [
+      "Xiangyu Qi",
+      "Kaixuan Huang",
+      "Ashwinee Panda",
+      "Peter Henderson",
+      "Mengdi Wang",
+      "Prateek Mittal"
+    ],
+    "year": 2024,
+    "venue": "AAAI 2024",
+    "doi": "arXiv:2306.13213",
+    "url": "https://arxiv.org/abs/2306.13213"
+  }
+];
+
+const studyTopicCatalog = [
+  { title: "Bayesian Inference Methods", collection: "Probabilistic ML", tags: ["Bayesian Inference", "Probability"] },
+  { title: "ENN: Evidential Neural Network", collection: "Probabilistic ML", tags: ["Uncertainty", "Deep Learning"] },
+  { title: "Empowerment", collection: "RL Foundations", tags: ["Intrinsic Motivation", "Information Theory"] },
+  { title: "Baseline & Actor-Critic", collection: "RL Foundations", tags: ["Actor-Critic", "Variance Reduction"] },
+  { title: "Bellman Equation", collection: "RL Foundations", tags: ["Dynamic Programming", "Value Function"] },
+  { title: "GAE: Generalized Advantage Estimation", collection: "RL Foundations", tags: ["Advantage Estimation", "Policy Gradient"] },
+  { title: "Policy Gradient Theorem", collection: "RL Foundations", tags: ["Policy Gradient", "RL Theory"] },
+  { title: "SCM: Structural Causal Model", collection: "Causal Inference", tags: ["Causality", "Graphical Model"] },
+  { title: "Uncertainty-Aware RL", collection: "Probabilistic ML", tags: ["Uncertainty", "Reinforcement Learning"] },
+  { title: "GQA: Grouped Query Attention", collection: "Transformers", tags: ["Attention", "LLM Architecture"] },
+  { title: "Transformer Architecture", collection: "Transformers", tags: ["Attention", "Architecture"] },
+  { title: "Transformer-based Diffusion", collection: "Generative Models", tags: ["Transformer", "Diffusion"] },
+  { title: "JAX remat & scan", collection: "Engineering & Tools", tags: ["JAX", "Memory Optimization"] },
+  { title: "JAX vs PyTorch", collection: "Engineering & Tools", tags: ["JAX", "PyTorch"] },
+  { title: "SimplerEnv", collection: "Engineering & Tools", tags: ["Robot Learning", "Evaluation"] },
+  { title: "Conditional, Joint, Marginal Distribution", collection: "Probability & Information", tags: ["Probability", "Distribution"] },
+  { title: "Kullback–Leibler (KL) Divergence", collection: "Probability & Information", tags: ["KL Divergence", "Information Theory"] },
+  { title: "Mutual Information", collection: "Probability & Information", tags: ["Information Theory", "Dependence"] },
+  { title: "Shannon Entropy", collection: "Probability & Information", tags: ["Entropy", "Information Theory"] },
+  { title: "DQN: Deep Q-Network", collection: "RL Algorithms", tags: ["Value-Based RL", "Q-Learning"] },
+  { title: "PPO: Proximal Policy Optimization", collection: "RL Algorithms", tags: ["Policy Gradient", "On-Policy RL"] },
+  { title: "REINFORCE", collection: "RL Algorithms", tags: ["Monte Carlo", "Policy Gradient"] },
+  { title: "SAC: Soft Actor-Critic", collection: "RL Algorithms", tags: ["Actor-Critic", "Maximum Entropy RL"] },
+  { title: "Diffusion Model", collection: "Generative Models", tags: ["Diffusion", "Score Matching"] },
+  { title: "GAN: Generative Adversarial Network", collection: "Generative Models", tags: ["GAN", "Adversarial Learning"] },
+  { title: "Generative Model", collection: "Generative Models", tags: ["Generative Modeling", "Probability"] },
+  { title: "VAE: Variational Autoencoder", collection: "Generative Models", tags: ["Variational Inference", "Latent Variable"] },
+  { title: "JEPA: Joint Embedding Predictive Architecture", collection: "Generative Models", tags: ["Representation Learning", "World Model"] },
+  { title: "VQ-VAE: Vector Quantized Variational Autoencoder", collection: "Generative Models", tags: ["Discrete Latent", "VAE"] },
+  { title: "Pi0 Code Study", collection: "VLA", tags: ["Pi0", "Code Study", "JAX"] },
+  { title: "Pi0.5", collection: "VLA", tags: ["Pi0", "VLA", "Hierarchical Inference"] },
+  { title: "PI0.6", collection: "VLA", tags: ["Pi0", "VLA", "Knowledge Insulation"] },
+  { title: "GR00T-N1", collection: "VLA", tags: ["GR00T", "VLA", "Cross-Embodiment"] },
+  { title: "GR00T-N1.5", collection: "VLA", tags: ["GR00T", "VLA", "FLARE"] },
+  { title: "GR00T-N1.6", collection: "VLA", tags: ["GR00T", "VLA", "Vision-Language Grounding"] },
+  { title: "Cosmos 3", collection: "World Models", tags: ["Cosmos", "World Model"] }
+];

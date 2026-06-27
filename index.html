@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f6f3ed">
+  <title>Paper Notes</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand-row">
+        <a class="brand" href="#" aria-label="Paper Notes 홈">
+          <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v5h4M9 12h7M9 16h7"/></svg></span>
+          <span>Paper Notes</span>
+        </a>
+        <button class="sidebar-close" id="sidebar-close" aria-label="메뉴 닫기">
+          <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <nav class="nav" aria-label="메인 메뉴">
+        <button class="nav-item active" data-view="home">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5V21h-6v-6H9v6H3v-9.5Z"/></svg>
+          Home
+        </button>
+        <button class="nav-item" data-view="library">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z"/><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20"/></svg>
+          Library
+          <span class="nav-count" id="library-count">0</span>
+        </button>
+        <button class="nav-item" data-view="topics">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4v15.5M7 4h13v13H7a3 3 0 0 0-3 3V7a3 3 0 0 1 3-3Z"/><path d="M10 8h7M10 12h5"/></svg>
+          Study Notes
+          <span class="nav-count" id="topic-count">0</span>
+        </button>
+        <button class="nav-item" data-view="favorites">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg>
+          Favorites
+        </button>
+      </nav>
+
+      <div class="sidebar-section">
+        <p class="eyebrow">Categories</p>
+        <div id="collection-list"></div>
+      </div>
+
+      <div class="sidebar-bottom">
+        <button class="utility-button" id="export-button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 18v3h14v-3"/></svg>
+          데이터 내보내기
+        </button>
+        <button class="utility-button" id="import-button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0 4 4m-4-4L8 8M5 18v3h14v-3"/></svg>
+          데이터 가져오기
+        </button>
+        <input type="file" id="import-input" accept="application/json" hidden>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobile-menu" aria-label="메뉴 열기">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <label class="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg>
+          <input id="search-input" type="search" placeholder="논문, 저자, 태그 검색..." autocomplete="off">
+          <kbd>⌘ K</kbd>
+        </label>
+        <button class="primary-button" id="add-paper-button">
+          <span>＋</span> 새 논문
+        </button>
+      </header>
+
+      <section class="dashboard" id="dashboard-view">
+        <div class="dashboard-header">
+          <div><p class="eyebrow">Research dashboard</p><h1>Overview</h1></div>
+          <button class="primary-button" id="hero-add-button">＋ 새 논문</button>
+        </div>
+
+        <div class="stats-row" id="stats-row"></div>
+
+        <section class="dashboard-section">
+          <div class="dashboard-section-heading">
+            <div><p class="eyebrow">Continue where you left off</p><h2>진행 중인 노트</h2></div>
+            <button class="text-button" data-go-library>전체 보기</button>
+          </div>
+          <div class="featured-papers" id="featured-papers"></div>
+        </section>
+
+        <section class="dashboard-section dashboard-bottom-grid">
+          <div>
+            <div class="dashboard-section-heading"><div><p class="eyebrow">Recently updated</p><h2>최근 기록</h2></div></div>
+            <div class="recent-list" id="recent-list"></div>
+          </div>
+          <div class="category-overview">
+            <div class="dashboard-section-heading"><div><p class="eyebrow">Research map</p><h2>카테고리</h2></div></div>
+            <div id="category-overview-list"></div>
+          </div>
+        </section>
+      </section>
+
+      <section class="content" id="library-view">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow" id="view-eyebrow">Your research space</p>
+            <h1 id="view-title">Paper library</h1>
+            <p class="subtitle" id="view-subtitle"></p>
+          </div>
+          <div class="view-toggle" aria-label="보기 방식">
+            <button data-layout="grid" aria-label="그리드 보기">
+              <svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></svg>
+            </button>
+            <button class="active" data-layout="table" aria-label="표 보기">
+              <svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <div class="filter-chips" id="filter-chips"></div>
+          <div class="multi-sort">
+            <button class="sort-trigger" id="sort-trigger" aria-expanded="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h8M8 18h4M4 4v16m0 0-2-2m2 2 2-2"/></svg>
+              <span id="sort-summary">정렬</span>
+            </button>
+            <div class="sort-panel" id="sort-panel" hidden>
+              <div class="sort-panel-heading"><strong>다중 정렬</strong><span>위 기준부터 순서대로 적용</span></div>
+              <div id="sort-rules"></div>
+              <div class="sort-panel-footer">
+                <button class="text-button" id="add-sort-rule">＋ 기준 추가</button>
+                <button class="text-button muted" id="reset-sort-rules">초기화</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="paper-grid" id="paper-grid"></div>
+        <div class="empty-state" id="empty-state" hidden>
+          <span>∅</span>
+          <h2>찾은 논문이 없습니다</h2>
+          <p>검색어나 필터를 바꿔보세요.</p>
+        </div>
+      </section>
+
+      <section class="reader" id="reader-view" hidden>
+        <button class="back-button" id="back-button">← Library</button>
+        <div class="reader-layout" id="reader-layout">
+          <article class="reader-main">
+            <div class="reader-meta" id="reader-meta"></div>
+            <h1 id="reader-title"></h1>
+            <p class="reader-authors" id="reader-authors"></p>
+            <div class="reader-actions">
+              <a class="primary-button" id="paper-link" target="_blank" rel="noreferrer">논문 열기 ↗</a>
+              <button class="secondary-button" id="edit-paper-button">정보 수정</button>
+              <button class="icon-button favorite-large" id="reader-favorite" aria-label="즐겨찾기">☆</button>
+            </div>
+            <div class="abstract-box">
+              <p class="eyebrow">Abstract / memo</p>
+              <p id="reader-abstract"></p>
+            </div>
+            <div class="note-section">
+              <div class="section-title-row">
+                <div>
+                  <p class="eyebrow">Reading note</p>
+                  <h2>내 노트</h2>
+                </div>
+                <div class="note-actions">
+                  <span class="save-status" id="save-status">저장됨</span>
+                  <button class="secondary-button" id="edit-note-button">노트 편집</button>
+                </div>
+              </div>
+              <div class="note-editor-wrap" id="note-editor-wrap" hidden>
+                <div class="editor-guide"><span># 제목</span><span>**강조**</span><span>$인라인 수식$</span><span>$$블록 수식$$</span><span>```코드```</span><span>![설명](이미지 URL)</span><span>[[노트 연결]]</span></div>
+                <textarea id="note-editor" placeholder="# 한 줄 요약&#10;&#10;## 핵심 아이디어&#10;- 이 논문의 중요한 주장&#10;&#10;## 방법론&#10;실험과 접근 방법을 기록하세요.&#10;&#10;## 내 생각&#10;다른 논문은 [[논문 제목]]처럼 연결할 수 있습니다."></textarea>
+                <div class="editor-footer">
+                  <button class="text-button" id="insert-template-button">노트 템플릿 넣기</button>
+                  <button class="primary-button" id="finish-note-button">편집 완료</button>
+                </div>
+              </div>
+              <div class="note-preview reading-document" id="note-preview"></div>
+            </div>
+          </article>
+          <aside class="reader-aside">
+            <button class="aside-toggle" id="aside-toggle" aria-label="패널 접기">
+              <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <div class="info-card">
+              <p class="eyebrow">Details</p>
+              <dl id="paper-details"></dl>
+            </div>
+            <div class="info-card toc-card" id="toc-card">
+              <p class="eyebrow">On this page</p>
+              <nav class="note-toc" id="note-toc" aria-label="노트 목차"></nav>
+            </div>
+            <div class="info-card">
+              <p class="eyebrow">Mentions</p>
+              <h3 id="mentions-title">이 항목을 언급한 노트</h3>
+              <div id="backlinks"></div>
+            </div>
+            <button class="delete-button" id="delete-paper-button">이 항목 삭제</button>
+          </aside>
+          <button class="aside-reopen" id="aside-reopen" aria-label="패널 열기">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="paper-dialog">
+    <form method="dialog" id="paper-form">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">Paper details</p>
+          <h2 id="dialog-title">새 논문 추가</h2>
+        </div>
+        <button class="dialog-close" type="button" id="dialog-close" aria-label="닫기">×</button>
+      </div>
+      <input type="hidden" id="paper-id">
+      <input type="hidden" id="content-type" value="paper">
+      <label><span id="title-field-label">논문 제목</span><input id="paper-title-input" required placeholder="Attention Is All You Need"></label>
+      <div class="form-row paper-only">
+        <label>저자 <input id="paper-authors-input" placeholder="Vaswani et al."></label>
+        <label>발행 연도 <input id="paper-year-input" type="number" min="1900" max="2100" placeholder="2024"></label>
+      </div>
+      <div class="form-row paper-only">
+        <label>카테고리 <input id="paper-collection-input" placeholder="Language models"></label>
+        <label>상태
+          <select id="paper-status-input">
+            <option value="not-yet">Not Yet</option>
+            <option value="on-going">On-Going</option>
+            <option value="done">Done</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-row">
+        <label>출간처 <input id="paper-venue-input" placeholder="NeurIPS, CVPR, Nature..."></label>
+        <label>DOI / 식별자 <input id="paper-doi-input" placeholder="10.1000/xyz 또는 arXiv ID"></label>
+      </div>
+      <label>키워드 <input id="paper-tags-input" placeholder="Transformer, NLP, Foundation model"><small>쉼표로 구분하세요.</small></label>
+      <label class="paper-only">논문 링크 <input id="paper-url-input" type="url" placeholder="https://arxiv.org/abs/..."></label>
+      <label>한 줄 요약 <textarea id="paper-abstract-input" rows="3" placeholder="이 논문을 기억해야 하는 이유"></textarea></label>
+      <div class="dialog-actions">
+        <button type="button" class="secondary-button" id="dialog-cancel">취소</button>
+        <button type="submit" class="primary-button">저장하기</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: { '[+]': [['$', '$']] },
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"></script>
+  <script src="catalog.js"></script>
+  <script src="study-notes-data.js"></script>
+  <script src="paper-notes-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
