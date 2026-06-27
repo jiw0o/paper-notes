@@ -689,7 +689,7 @@ const curatedPaperCatalog = [
     "url": "https://arxiv.org/abs/2501.15830"
   },
   {
-    "title": "Task Reconstruction and Extrapolation for π₀ using Text Latent",
+    "title": "VLAs are Confined yet Capable of Generalizing to Novel Instructions",
     "authors": [
       "Quanyi Li"
     ],

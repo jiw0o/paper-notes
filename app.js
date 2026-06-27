@@ -202,13 +202,25 @@ const sortFields = [
 
 function loadPapers() {
   try {
+    const snapshot = (typeof notesSnapshot !== "undefined" && Array.isArray(notesSnapshot?.papers) && notesSnapshot.papers.length)
+      ? notesSnapshot : null;
     let current;
     if (!localStorage.getItem(CATALOG_VERSION_KEY)) {
+      // Fresh load: a synced snapshot holds the full state losslessly, so use it
+      // directly and mark every seed step applied. Otherwise build from the
+      // curated seeds (catalog.js + imported notes) as before.
+      if (snapshot) {
+        current = snapshot.papers;
+        [CATALOG_VERSION_KEY, TOPIC_CATALOG_KEY, STUDY_CONTENT_KEY, PAPER_CONTENT_KEY]
+          .forEach(key => localStorage.setItem(key, "applied"));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+        return current;
+      }
       current = buildCuratedCatalog();
       localStorage.setItem(CATALOG_VERSION_KEY, "applied");
     } else {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      current = Array.isArray(saved) ? saved : buildCuratedCatalog();
+      current = Array.isArray(saved) ? saved : (snapshot ? snapshot.papers : buildCuratedCatalog());
     }
     if (!localStorage.getItem(TOPIC_CATALOG_KEY)) {
       current = [...current, ...buildStudyTopics()];
