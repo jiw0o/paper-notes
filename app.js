@@ -180,6 +180,7 @@ function applyImportedPaperNotes(items) {
 
 function mergeMissingCuratedPapers(items) {
   const additionTitles = new Set([
+    "EgoScale: Scaling Dexterous Manipulation with Diverse Egocentric Human Data",
     "PVI: Plug-in Visual Injection for Vision-Language-Action Models",
     "T-Rex: Tactile-Reactive Dexterous Manipulation",
     "VLA-Adapter: An Effective Paradigm for Tiny-Scale Vision-Language-Action Model"

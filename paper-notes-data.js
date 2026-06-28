@@ -1,5 +1,9 @@
 // Auto-generated from Notion "Research Paper Notes" export. Do not edit by hand.
 const importedPaperNotes = {
+  "EgoScale: Scaling Dexterous Manipulation with Diverse Egocentric Human Data": {
+    "note": "",
+    "status": "not-yet"
+  },
   "PVI: Plug-in Visual Injection for Vision-Language-Action Models": {
     "note": "",
     "status": "not-yet"

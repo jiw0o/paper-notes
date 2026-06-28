@@ -912,6 +912,31 @@ const curatedPaperCatalog = [
     "doi": "arXiv:2509.09372",
     "url": "https://arxiv.org/abs/2509.09372",
     "categories": ["VLA", "VLM"]
+  },
+  {
+    "title": "EgoScale: Scaling Dexterous Manipulation with Diverse Egocentric Human Data",
+    "authors": [
+      "Ruijie Zheng",
+      "Dantong Niu",
+      "Yuqi Xie",
+      "Jing Wang",
+      "Mengda Xu",
+      "Yunfan Jiang",
+      "Fernando Castañeda",
+      "Fengyuan Hu",
+      "You Liang Tan",
+      "Letian Fu",
+      "Trevor Darrell",
+      "Furong Huang",
+      "Yuke Zhu",
+      "Danfei Xu",
+      "Linxi Fan"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2602.16710",
+    "url": "https://arxiv.org/abs/2602.16710",
+    "categories": ["Dexterous Manipulation", "VLA", "Training Recipe"]
   }
 ];
 
