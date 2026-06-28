@@ -6,7 +6,7 @@
 // app falls back to catalog.js / paper-notes-data.js / study-notes-data.js.
 const notesSnapshot = {
   "version": 1,
-  "exportedAt": "2026-06-28T05:37:24.223Z",
+  "exportedAt": "2026-06-28T08:38:50.797Z",
   "papers": [
     {
       "id": "paper-02",
@@ -75,7 +75,7 @@ const notesSnapshot = {
       "doi": "arXiv:2606.12109",
       "url": "https://arxiv.org/abs/2606.12109",
       "collection": "VLA",
-      "status": "not-yet",
+      "status": "on-going",
       "tags": [
         "Intention",
         "Dexterous Manipulation"
@@ -83,7 +83,7 @@ const notesSnapshot = {
       "abstract": "",
       "note": "# **Stage 1: Macro-Reaching Alignment and Intent Prediction**\n\n- π0.5의 VLM backbone은 freeze하고, Action Expert에만 **LoRA**를 적용\n- 이 단계에서 model은 다음을 예측합니다.\n    - 6-DoF arm reaching command\n    - coarse hand configuration 또는 grasp intent에 해당하는 output\n- Action Expert의 terminal projection layer를 수정\n    - end-effector action dimension을 1에서 6으로 확장\n    - 6-DoF hand output은 최종 precise dexterous control이 아님\n    - γ로 변환되는 high-level grasp intent 역할\n\n# **Stage 2: Intent-Conditioned Dexterous Adaptation**\n\n- Stage 1 이후 VLA backbone은 freeze\n- VLA에서 얻은 Condition\n    - **latent visual embeddings zvis**\n    - 현재 hand state **qcurr**\n    - grasp intent **γ**\n- diffusion head가 dexterous hand joint action을 생성\n\n즉, 전체적으로는 다음과 같은 역할 분리가 일어납니다.\n\n- VLA / π0.5: “어디로 가고, 언제 grasp해야 하는가?”\n- Diffusion Head: “각 finger joint를 어떻게 움직여 stable grasp/contact를 만들 것인가?”\n\n이 분리가 논문의 핵심입니다.\n\n## 3.2 Grasp Intent γ 계산\n\n논문은 Fourier FDH-6 dexterous hand를 기준으로 γ를 정의합니다. hand joint state는 thumb 2-DoF와 opposing fingers 4-DoF로 구성됩니다.\n\n핵심 아이디어는 thumb fingertip과 나머지 네 finger fingertip centroid 사이의 거리를 **Virtual Grasping Aperture**로 보고, 이를 [0, 1] 범위로 normalize하는 것입니다.\n\n$d_v(q)=\\|p_{th}-\\bar p_f\\|_2$\n\n$\\gamma=\\frac{d_{max}-d_v(q)}{d_{max}-d_{min}}$\n\n따라서 hand가 열려 있으면 γ가 0에 가깝고, 닫혀 있으면 γ가 1에 가까워집니다. 중요한 점은 dexterous hand의 복잡한 joint configuration을 VLA가 이해하기 쉬운 **parallel gripper-like scalar command**로 만든다는 것입니다.",
       "favorite": false,
-      "updatedAt": "2026-06-28T05:16:42.414Z"
+      "updatedAt": "2026-06-28T08:38:39.903Z"
     },
     {
       "id": "paper-06",
@@ -536,14 +536,14 @@ const notesSnapshot = {
       "doi": "arXiv:2604.23073",
       "url": "https://arxiv.org/abs/2604.23073",
       "collection": "VLA",
-      "status": "not-yet",
+      "status": "on-going",
       "tags": [
         "Reinforcement Learning"
       ],
       "abstract": "",
       "note": "# Overview\n\n## Problem\n\n- VLA가 다양한 Manipulation Skill을 배울 수는 있음\n- 하지만, Last Millimeter of Execution 문제를 자주 겪음\n- 작은 오차가 누적되어 실패하는 경우가 많음\n\n## Reinforcement Learning\n\n- Foundation Model 전체를 RL로 학습\n    - 다량의 Data가 필요함\n    - 빠르게 Online Adaptation 하는데에는 비효율적\n- Sample-Efficient RL Methods\n    - DDPG, SAC, TD3 같은 Off-policy 방법들\n    - **SERL**, **RL100, HITL (Human-In-The-Loop) 방법들**\n    - 작은 Policy와 Standard한 Visual Encoder들을 사용\n    - VLA의 Generalization 능력을 잃어버림\n- VLA의 Generalization을 유지하면서 Efficient한 방법이 필요\n\n## RL Fine-tuning of VLAs\n\n- Full Model Fine-tuning\n    - Offline RL 방식\n        - $\\pi_{0.6}^*$ 의 RECAP\n        - Advantage-conditioned policy extraction\n    - On-policy 방식\n        - PPO 계열의 방법\n        - Real-World에서 Sample-Efficient하게 사용하기 어려움\n- Light-weight Module을 추가하는 방식\n    - ConRFT, Policy Decorator, PLD< GR-RL, DSRL\n    - Frozen VLA + Residual Policy / Latent Noise Policy\n    - 한계점들\n        - single step action 기반\n        - simulation 위주\n        - diffusion latent space에서 간접적 steering\n\n## RL Token\n\n- VLA 내부의 Task-Relevant한 Knowledge를 요약하는 Token을 추가\n- Forzen VLA에서 작은 Actor-Critic이 활용가능한 Representation을 학습\n- Single step action이 아닌 chunked action위에서 학습\n- VLA에서 Sampling된 Reference action chunk를 입력받고 그걸에 Regularization\n    - Observation에서 바로 Residual이나 Latent Noise를 예측 X\n    - VLA의 Prior를 활용해 Local Refinement\n\n# RL Token",
       "favorite": false,
-      "updatedAt": "2026-06-28T05:35:52.501Z"
+      "updatedAt": "2026-06-28T08:38:01.802Z"
     },
     {
       "id": "paper-31",
@@ -707,7 +707,7 @@ const notesSnapshot = {
       "doi": "arXiv:2606.17055",
       "url": "https://arxiv.org/abs/2606.17055",
       "collection": "VLA",
-      "status": "not-yet",
+      "status": "on-going",
       "tags": [
         "Tactile",
         "Dexterous Manipulation"
@@ -715,7 +715,7 @@ const notesSnapshot = {
       "abstract": "",
       "note": "",
       "favorite": false,
-      "updatedAt": "2026-06-28T05:34:47.245Z"
+      "updatedAt": "2026-06-28T08:38:13.501Z"
     },
     {
       "id": "paper-40",
@@ -803,14 +803,14 @@ const notesSnapshot = {
       "doi": "arXiv:2606.22332",
       "url": "https://arxiv.org/abs/2606.22332",
       "collection": "Tactile",
-      "status": "not-yet",
+      "status": "on-going",
       "tags": [
         "Dexterous Manipulation"
       ],
       "abstract": "",
       "note": "",
       "favorite": false,
-      "updatedAt": "2026-06-28T05:34:42.555Z"
+      "updatedAt": "2026-06-28T08:38:35.190Z"
     },
     {
       "id": "topic-01",
@@ -1465,12 +1465,12 @@ const notesSnapshot = {
       "doi": "arXiv:2603.12772",
       "url": "https://arxiv.org/abs/2603.12772",
       "collection": "VLA",
-      "status": "not-yet",
+      "status": "done",
       "tags": [
         "Adaptation"
       ],
       "abstract": "",
-      "note": "",
+      "note": "# Overview\n\n- Background (기존 VLA)\n    - VLM이 multi-view image와 language instruction을 encode\n    - Action Expert가 이 representation을 conditioning으로 사용\n- Problem\n    - VLM은 주로 **semantic abstraction, language alignment, scene-level reasoning**에 최적화되어 있음\n    - VLM representation이 action generation에 필요한 **geometric / temporal cue**를 충분히 보존하지 못함\n        - geometric: 어떤 object, affordance 등\n        - temporal: contact transition, subtask progress 등\n- **PVI (Plug-in Visual Injection)**\n    - encoder-agnostic한 visual injection framework\n        - auxiliary visual encoder + copy branch ⇒ Action Expert에 visual feature를 직접 inject\n    - pretrained behavior를 보존하면서 천천히 외부 정보를 주입\n        - plug-in pathway에는 **zero initialization** 사용\n        - pretrained VLA backbone은 손대지 않고, PVI plug-in pathway만 바로 학습\n        - 처음에는 그냥 pretrained VLA backbone이지만 점점 visual injection에 영향을 받기 시작\n\n---\n\n# Method\n\n- Base 모델로 GR00T 사용\n\n## Frozen Auxiliary Visual Encoder\n\n- raw observation에서 auxiliary feature를 추출\n- 논문에서는 V-JEPA2와 DINOv2의 feature를 비교\n- 어떤 visual encoder가 오든 사용 가능\n\n## Trainable Copy-branch DiT\n\n- main DiT와 동일한 Architecture를 복사\n- VLM의 feature와 cross-attention하는 부분을 auxiliary feature로 대체\n- Auxiliary feature projection layer $W_{proj}$\n    \n    : zero-initialized projection layer\n    \n    ⇒ auxiliary feature를 Action Expert가 기대하는 conditioning dimension으로 변환\n    \n- dimension만 같으면 되고 token length가 같을 필요는 없음\n\n## Layer-wise Residual Injection\n\n- Layer-wise injection layer $Z_i$\n    \n    : copy branch의 각 layer hidden state를 zero-initialized linear layer에 통과\n    \n    ⇒ input과 동일한 dimension을 출력\n    \n- 같은 depth의 frozen main DiT hidden state에 residual로 더해줌\n    \n    ⇒ auxiliary feature가 action denoising 과정 전체 depth에 영향을 줌\n    \n\n---\n\n# Experiments\n\n## 다른 Injection 방법과의 비교\n\n![image.png](./assets/papers/pvi_architecture.png)\n\n- Success Rate\n    - GR00T N1.5 fine-tuned : 35.7%\n    - Concat : 43.6%\n    - ControlNet-style : 34.35%\n    - ControlVLA-style : 37.0%\n    - ReferenceNet-style : 37.4%\n    - **PVI : 59.7%**\n- 각 방법\n    - Concat\n        - 그냥 VLM feature 뒤에 auxiliary feature를 concat\n    - ControlNet-style\n        - PVI와 비슷한 구조\n        - frozen DiT 옆에 trainable copy branch를 추가\n        - auxiliary feature와 state-action embedding을 더해준 것을 input으로 사용\n        - control branch에서도 VLM feature와 cross-attention\n    - ControlVLA-style\n        - attention computation 자체에 auxiliary attention을 추가\n        - VLM feature와의 CA 결과와 auxiliary feature와의 CA 결과를 더해줌\n    - ReferenceNet-style\n        - copy branch에 auxiliary feature만 input으로 사용\n        - VLM feature와 cross-attention한 결과를 VLM feature 뒤쪽에 concat\n        - main과 copy DiT를 모두 학습\n- 해석\n    - auxiliary feature는 분명 유용하지만, 단순히 context에 붙이는 방식은 pretrained Action Expert가 그 정보를 효율적으로 쓰기 어려움\n    - attention-level injection만으로는 부족\n    - side branch가 효과적이지만 side branch 자체가 중요한 것은 아님\n        \n        ⇒ auxiliary signal을 **어디에 넣고**, main action trajectory와 **어떻게 align**시킬 것인가가 중요\n        \n\n## Auxiliary Encoder 선택 (V-JEPA2 vs DINOv2)\n\n- Average Success\n    - GR00T N1.5 fine-tuned : 39.8%\n    - PVI@DINOv2 : 56.8%\n    - PVI@V-JEPA2 : 69.4%\n    - PVI@V-JEPA2 + DINOv2 : 68.9%\n- 해석\n    - static image feature인 DINOv2도 도움은 됨\n    - 하지만 temporal video feature인 V-JEPA2가 훨씬 큰 gain을 줌\n    - V-JEPA2 + DINOv2 조합이 V-JEPA2 단독보다 더 좋아지지 않음\n        \n        ⇒ temporal representation이 static appearance / geometric cue보다 더 중요한 signal을 제공\n        \n\n---\n\n# Discussion\n\n## 1. Single-task vs Multi-task\n\n- Baseline → PVI (Gain)\n    - Single-task, 20 tasks 평균 : 35.70% → 59.70% (+24.00 pp)\n    - Multi-task, 20-task mixture : 61.15% → 69.15% (+8.00 pp)\n    - Multi-task, 50-task mixture : 61.32% → 63.56% (+2.24 pp)\n- 한 정책이 여러 task를 배울수록 injection의 효용성이 줄어듦\n    - Multi-task에서는 baseline 자체가 훨씬 강해짐\n    - Single-task에선 PVI가 하나의 task에 맞춰 최적화하면 되지만, multi-task에서는 shared auxiliary adapter가 되어야 함\n    - 일부 task에서는 auxiliary temporal feature나 injection branch가 오히려 기존 policy의 decision boundary를 약화시킴\n\n## 2. Zero Initialization\n\n- zero initialization은 안정성을 위한 장치일 뿐\n- 때로는 no-zero initialization이 더 좋은 성능을 보일 수 있음\n\n## 3. $W_{proj}$ Freeze\n\n- auxiliary feature를 CA 가능한 공간으로 projection시키는 $W_{proj}$를 freeze했더니 성능이 떨어짐\n- auxiliary encoder가 frozen이라도, 그 feature를 Action Expert embedding space에 맞게 align하는 것은 반드시 학습되어야 함\n- (의문) 어떤 시점에서 freeze를 했다는 것인지 불분명 — zero나 random 상태로 freeze한 것이라면 불공평한 실험\n",
       "favorite": false,
       "updatedAt": "2026-06-28T05:34:53.933Z"
     },
@@ -1484,13 +1484,13 @@ const notesSnapshot = {
       "doi": "arXiv:2509.09372",
       "url": "https://arxiv.org/abs/2509.09372",
       "collection": "VLA",
-      "status": "not-yet",
+      "status": "done",
       "tags": [
         "VLM",
         "Adaptation"
       ],
       "abstract": "",
-      "note": "",
+      "note": "# Overview & Contribution\n\n- Background\n    - VLA 연구들에서 VLM의 지식을 Action Generation Policy에 전달하는 구조가 사용됨\n- Objective\n    - VLM의 Vision-Language Representation을 Action Space로 어떻게 **Bridging**하는 게 가장 효율적인지 분석\n- 기존 Bridging Paradigm\n    1. Raw VLM Feature를 사용하는 방법\n        - π 계열: 모든 layer의 feature를 사용\n        - GR00T 계열: 중간 layer의 feature를 사용\n        - RoboVLMs: 마지막 layer만 사용\n    2. Action Query를 사용하는 방법\n        - VLM의 raw feature가 아니라 **Action Query**를 둬서 VLM의 feature를 aggregate해 전달\n\n---\n\n# L1 Policy\n\n- DiT policy 대신 **Transformer 구조의 L1 Policy**를 사용\n- 구조: Zero Action Chunk에서 시작해 Transformer Layer를 거치며 점진적으로 latent action을 갱신\n    - $A^0_t$ (Zero Action Chunk)\n        \n        ⇒ LN + MLP ⇒ 0-th latent action $\\tilde{A}^0_t$\n        \n    - $\\tilde{A}^0_t$ ⇒ 1st Transformer Layer ⇒ $\\tilde{A}^1_t$\n    - $\\tilde{A}^1_t$ ⇒ 2nd Transformer Layer ⇒ $\\tilde{A}^2_t$\n    - …\n    - $\\tilde{A}^{M-1}_t$ ⇒ M-th Transformer Layer ⇒ $\\tilde{A}^M_t$\n    - $\\tilde{A}^M_t$ ⇒ LN + MLP ⇒ $A_t$\n\n---\n\n# Experiments\n\n- 실험 세팅: 위 L1 Policy가 **cross-attention에서 무엇을 참조하는지**를 바꿔가며 비교\n\n## Raw Feature 비교\n\n- Success Rate (참조 layer별)\n    - layer 1 : 87.6\n    - layer 5 : 86.6\n    - layer 9 : 89.8\n    - layer 13 : 88.4\n    - layer 17 : 84.4\n    - layer 21 : 83.2\n    - layer 24 : 85.8\n    - all-layer 1–24 : 90.6\n- **결론 1: Raw feature는 middle layer가 deep layer보다 좋다**\n    - 일반적으로 VLM/Transformer는 deep layer로 갈수록 token representation이 task-level semantic abstraction에 가까워지고, 중간 layer에는 더 많은 spatial / local / perceptual detail이 남아 있다는 해석이 자주 쓰임\n    - 논문의 해석\n        - deep layer로 갈수록 semantic information에 치우쳐 action generation에 덜 효과적\n        - middle layer는 image-text multimodal detail을 더 잘 보존하기에 더 효과적\n\n## Action Query Feature 비교\n\n- Success Rate (참조 layer별)\n    - layer 1 : 78.2\n    - layer 13 : 76.6\n    - layer 17 : 86.8\n    - layer 21 : 88.8\n    - layer 23 : 89.6\n    - layer 24 : 90.2\n    - all-layer 1–24 : 92.6\n- **결론 2: Action Query의 feature는 deep layer로 갈수록 더 좋다**\n    - 논문의 해석\n        - Action Query는 VLM sequence 안에 삽입된 learnable token\n        - image-language token들과 attention interaction을 수행하면서 action generation에 필요한 task/action-relevant한 multimodal information을 aggregate하도록 학습\n        \n        ⇒ layer를 거칠수록 필요한 정보를 더 많이 축적할 수 있었을 것\n        \n\n## All-layer vs Single-layer\n\n- **결론 3: single-layer보다 all-layer feature가 좋다**\n    - single-layer feature는 특정 abstraction level 하나에만 의존\n    - all-layer feature는 shallow / middle / deep layer의 정보를 Policy 각 layer에 단계적으로 제공\n        \n        ⇒ 더 안정적이고 robust한 condition을 제공\n        \n\n---\n\n# Bridge Attention\n\n- All-layer raw feature와 All-layer Action Query feature를 **모두 사용**\n- 단, **learnable gate**를 사용해 선택적으로 정보를 수용\n- Injection 방식 ablation (Raw injection / ActionQuery injection ⇒ Success Rate)\n    - $\\tanh(g)$ / 1 ⇒ **95.0**\n    - 1 / 1 ⇒ 91.4\n    - 1 / $\\tanh(g)$ ⇒ 91.0\n    - $\\tanh(g)$ / $\\tanh(g)$ ⇒ 92.6\n- 결론\n    - Raw feature는 **gate를 사용해 learnable injection**\n    - Action Query는 **모든 정보를 다 사용** (gate 없이)\n    \n    ⇒ 이 조합이 가장 좋음\n    \n\n---\n\n# Discussion\n\n## 왜 Diffusion 기반 Policy를 안 썼나\n\n- 실험 세팅을 보면 action의 distribution이 redundant하지 않음\n- 비교적 직접적으로 action trajectory를 예측할 수 있음\n\n⇒ 이런 경우에는 diffusion보다 **L1-based policy가 더 유리**할 수 있음\n\n## Pure VLM backbone vs Robotic pre-trained backbone\n\n- pure VLM backbone에서는 bridge design을 바꾸는 것만으로 큰 성능 향상\n- 이미 robotic data로 pre-trained된 backbone에서는 추가 향상 폭이 작음\n- 원인 해석\n    - pure VLM backbone은 action에 대한 고려 없이 시각적 이해에만 집중하는 모델\n        \n        ⇒ 이 정보들을 action에 필요한 정보로 가공해주는 **adapter의 영향이 큼**\n        \n    - robot data로 pre-trained된 backbone은 내부 representation이 이미 action domain에 aligned되어 있음\n        \n        ⇒ adapter로 인한 이득이 적음\n",
       "favorite": false,
       "updatedAt": "2026-06-28T05:34:32.042Z"
     },
@@ -1504,7 +1504,7 @@ const notesSnapshot = {
       "doi": "arXiv:2602.16710",
       "url": "https://arxiv.org/abs/2602.16710",
       "collection": "Dexterous Manipulation",
-      "status": "not-yet",
+      "status": "on-going",
       "tags": [
         "VLA",
         "Training Recipe"
@@ -1512,7 +1512,7 @@ const notesSnapshot = {
       "abstract": "",
       "note": "",
       "favorite": false,
-      "updatedAt": "2026-06-28T05:34:16.521Z"
+      "updatedAt": "2026-06-28T08:38:23.404Z"
     }
   ]
 };
