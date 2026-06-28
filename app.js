@@ -1,8 +1,31 @@
 const STORAGE_KEY = "margin-paper-notes-v1";
 const CATALOG_VERSION_KEY = "margin-curated-catalog-v3";
+const CATALOG_ADDITIONS_KEY = "margin-curated-catalog-additions-v1";
 const TOPIC_CATALOG_KEY = "paper-notes-study-topics-v2";
 const STUDY_CONTENT_KEY = "paper-notes-imported-content-v4";
+const STUDY_TAXONOMY_KEY = "paper-notes-study-taxonomy-v1";
 const PAPER_CONTENT_KEY = "paper-notes-imported-paper-content-v3";
+const COL_WIDTHS_KEY = "paper-notes-col-widths-v1";
+// Column width model. `flex: true` → no width, absorbs remaining space (always the
+// widest column, keeps the table at 100% so it never overflows). `pct` → default
+// width as % of the table. `fixed: true` → fixed px width, no resizer. A dragged
+// width is stored in px and overrides the default.
+const PAPER_COLUMNS = [
+  { key: "title", label: "논문", cls: "title-col", flex: true },
+  { key: "authors", label: "저자", pct: 5 },
+  { key: "year", label: "연도", pct: 5 },
+  { key: "venue", label: "발표처", pct: 5 },
+  { key: "category", label: "카테고리", pct: 20 },
+  { key: "status", label: "상태", pct: 10 },
+  { key: "fav", label: "", width: 48, fixed: true }
+];
+const TOPIC_COLUMNS = [
+  { key: "title", label: "학습 주제", cls: "title-col", flex: true },
+  { key: "category", label: "카테고리", pct: 30 },
+  { key: "status", label: "상태", pct: 10 },
+  { key: "updated", label: "최근 수정", pct: 11 },
+  { key: "fav", label: "", width: 48, fixed: true }
+];
 
 const seedPapers = [
   {
@@ -55,49 +78,22 @@ const seedPapers = [
   }
 ];
 
-function inferCatalogKeywords(title) {
-  const rules = [
-    [/vision-language-action|\bVLA\b/i, "VLA"],
-    [/reinforcement learning|\bRL\b|actor-critic|policy gradients/i, "Reinforcement Learning"],
-    [/world model|world-action|generative interactive/i, "World Model"],
-    [/causal/i, "Causality"],
-    [/skill discovery|learning skills/i, "Skill Discovery"],
-    [/latent action/i, "Latent Action"],
-    [/simulation/i, "Simulation"],
-    [/humanoid|human-centric/i, "Humanoid"],
-    [/dexterous|bimanual/i, "Dexterous Manipulation"],
-    [/locomotion|loco-manipulation|whole-body/i, "Locomotion"],
-    [/spatial/i, "Spatial Reasoning"],
-    [/diffusion policy/i, "Diffusion Policy"],
-    [/uncertainty|risk-aware|risk and uncertainty/i, "Risk & Uncertainty"],
-    [/video/i, "Video Learning"]
-  ];
-  return rules.filter(([pattern]) => pattern.test(title)).map(([, keyword]) => keyword);
-}
-
-function inferCatalogCategory(title, tags) {
-  if (/jailbreak|adversarial examples/i.test(title)) return "VLM Safety";
-  if (tags.includes("Causality")) return "Causal RL";
-  if (tags.includes("Skill Discovery")) return "Skill Discovery";
-  if (tags.includes("World Model") || tags.includes("Latent Action")) return "World Models";
-  if (tags.includes("VLA")) return "Vision-Language-Action";
-  if (tags.includes("Locomotion")) return "Loco-Manipulation";
-  if (tags.includes("Reinforcement Learning")) return "Reinforcement Learning";
-  return "Robot Learning";
-}
-
 function buildCuratedCatalog() {
   const now = Date.now();
   return curatedPaperCatalog.map((paper, index) => {
-    const tags = inferCatalogKeywords(paper.title);
+    // Categories are assigned manually (per paper) via the catalog's `categories`
+    // field or the in-app edit dialog — never inferred from the title. A paper with
+    // no categories stays uncategorized until you set them.
+    const { categories: rawCategories, ...rest } = paper;
+    const categories = Array.isArray(rawCategories) ? rawCategories : [];
     return {
     id: `paper-${String(index + 1).padStart(2, "0")}`,
     type: "paper",
-    ...paper,
-    authors: paper.authors.join(", "),
-    collection: inferCatalogCategory(paper.title, tags),
+    ...rest,
+    authors: rest.authors.join(", "),
+    collection: categories[0] || "",
     status: "done",
-    tags,
+    tags: categories.slice(1),
     abstract: "",
     note: "",
     favorite: false,
@@ -149,12 +145,20 @@ function applyImportedStudyNotes(items) {
       return itemKey === sourceKey || itemKey.startsWith(sourceKey) || sourceKey.startsWith(itemKey);
     });
     if (!topic) return;
-    const categories = imported.category.split(",").map(value => value.trim()).filter(Boolean);
     topic.note = imported.note;
-    topic.collection = categories[0] || topic.collection;
-    topic.tags = [...new Set([...(topic.tags || []), ...categories])];
     topic.abstract = `${topic.collection}에 관한 개념, 수식, 구현 내용을 정리한 학습 노트입니다.`;
     topic.updatedAt = new Date().toISOString();
+  });
+  return items;
+}
+
+function applyStudyTaxonomy(items) {
+  const taxonomy = new Map(studyTopicCatalog.map(topic => [normalizeStudyTitle(topic.title), topic]));
+  items.filter(isTopic).forEach(item => {
+    const template = taxonomy.get(normalizeStudyTitle(item.title));
+    if (!template) return;
+    item.collection = template.collection;
+    item.tags = [...template.tags];
   });
   return items;
 }
@@ -170,6 +174,36 @@ function applyImportedPaperNotes(items) {
     target.note = imported.note;
     if (imported.status) target.status = imported.status;
     target.updatedAt = new Date().toISOString();
+  });
+  return items;
+}
+
+function mergeMissingCuratedPapers(items) {
+  const additionTitles = new Set([
+    "T-Rex: Tactile-Reactive Dexterous Manipulation"
+  ]);
+  const existingTitles = new Set(items.filter(item => !isTopic(item)).map(item => item.title));
+  const usedIds = new Set(items.map(item => item.id));
+  buildCuratedCatalog().forEach(template => {
+    if (!additionTitles.has(template.title) || existingTitles.has(template.title)) return;
+    let id = template.id;
+    if (usedIds.has(id)) {
+      const source = template.doi || template.title;
+      const base = `paper-${source.toLowerCase().replace(/[^a-z0-9가-힣]+/g, "-").replace(/^-|-$/g, "")}`;
+      id = base;
+      let suffix = 2;
+      while (usedIds.has(id)) id = `${base}-${suffix++}`;
+    }
+    const imported = typeof importedPaperNotes !== "undefined" ? importedPaperNotes[template.title] : null;
+    items.push({
+      ...template,
+      id,
+      note: imported?.note ?? template.note,
+      status: imported?.status || template.status,
+      updatedAt: new Date().toISOString()
+    });
+    existingTitles.add(template.title);
+    usedIds.add(id);
   });
   return items;
 }
@@ -195,6 +229,25 @@ function categoryColor(name) {
   for (const c of name) h = (h * 31 + c.charCodeAt(0)) & 0x7fffffff;
   return CATEGORY_PALETTE[h % CATEGORY_PALETTE.length];
 }
+function categoriesFor(item) {
+  const aliases = isTopic(item) ? {} : {
+    VLA: "Vision-Language-Action",
+    "World Model": "World Models",
+    Causality: "Causal RL",
+    Locomotion: "Loco-Manipulation"
+  };
+  return [...new Set([item?.collection, ...(item?.tags || [])]
+    .map(value => String(value || "").trim())
+    .map(value => aliases[value] || value)
+    .filter(Boolean))];
+}
+function categoryBadges(item, limit = Infinity) {
+  const categories = categoriesFor(item);
+  if (!categories.length) categories.push("Unsorted");
+  return categories.slice(0, limit).map(name =>
+    `<span class="category-badge" style="--category-color:${categoryColor(name)}">${escapeHtml(name)}</span>`
+  ).join("");
+}
 const sortFields = [
   ["category", "카테고리"], ["year", "발행 연도"], ["authors", "저자"],
   ["title", "제목"], ["venue", "발표처"], ["updated", "최근 수정"], ["status", "진행 상태"]
@@ -210,8 +263,8 @@ function loadPapers() {
       // directly and mark every seed step applied. Otherwise build from the
       // curated seeds (catalog.js + imported notes) as before.
       if (snapshot) {
-        current = snapshot.papers;
-        [CATALOG_VERSION_KEY, TOPIC_CATALOG_KEY, STUDY_CONTENT_KEY, PAPER_CONTENT_KEY]
+        current = applyStudyTaxonomy(snapshot.papers);
+        [CATALOG_VERSION_KEY, CATALOG_ADDITIONS_KEY, TOPIC_CATALOG_KEY, STUDY_CONTENT_KEY, STUDY_TAXONOMY_KEY, PAPER_CONTENT_KEY]
           .forEach(key => localStorage.setItem(key, "applied"));
         localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
         return current;
@@ -222,6 +275,10 @@ function loadPapers() {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
       current = Array.isArray(saved) ? saved : (snapshot ? snapshot.papers : buildCuratedCatalog());
     }
+    if (!localStorage.getItem(CATALOG_ADDITIONS_KEY)) {
+      current = mergeMissingCuratedPapers(current);
+      localStorage.setItem(CATALOG_ADDITIONS_KEY, "applied");
+    }
     if (!localStorage.getItem(TOPIC_CATALOG_KEY)) {
       current = [...current, ...buildStudyTopics()];
       localStorage.setItem(TOPIC_CATALOG_KEY, "applied");
@@ -229,6 +286,10 @@ function loadPapers() {
     if (!localStorage.getItem(STUDY_CONTENT_KEY)) {
       current = applyImportedStudyNotes(current);
       localStorage.setItem(STUDY_CONTENT_KEY, "applied");
+    }
+    if (!localStorage.getItem(STUDY_TAXONOMY_KEY)) {
+      current = applyStudyTaxonomy(current);
+      localStorage.setItem(STUDY_TAXONOMY_KEY, "applied");
     }
     if (!localStorage.getItem(PAPER_CONTENT_KEY)) {
       current = applyImportedPaperNotes(current);
@@ -319,7 +380,6 @@ function renderDashboard() {
   const topicItems = papers.filter(isTopic);
   const read = papers.filter(p => p.status === "done").length;
   const reading = papers.filter(p => p.status === "on-going").length;
-  const categories = new Set(papers.map(p => p.collection).filter(Boolean)).size;
   const mentions = papers.reduce((sum, p) => sum + ((p.note || "").match(/\[\[[^\]]+\]\]/g) || []).length, 0);
   const stats = [[paperItems.length, "논문"], [topicItems.length, "학습 주제"], [reading, "진행 중"], [mentions, "노트 연결"]];
   $("#stats-row").innerHTML = stats.map(([value, label]) => `<div class="stat-item"><strong class="stat-value">${value}</strong><span class="stat-label">${label}</span></div>`).join("");
@@ -330,7 +390,7 @@ function renderDashboard() {
   $("#featured-papers").innerHTML = shown.length ? shown.map((paper, index) => `
     <article class="featured-card" data-dashboard-paper="${paper.id}">
       <div class="progress-rail" style="--progress:${paper.status === "on-going" ? 55 + index * 15 : 15}%"></div>
-      <div><div class="featured-meta"><span>${escapeHtml(paper.collection || "Unsorted")}</span><span>${paper.year || "—"}</span></div>
+      <div><div class="featured-meta"><span class="category-list">${categoryBadges(paper, 2)}</span><span>${paper.year || "—"}</span></div>
       <h3>${escapeHtml(paper.title)}</h3><p>${escapeHtml(paper.authors || "저자 미상")} · ${escapeHtml(paper.venue || "출간처 미상")}</p></div>
     </article>`).join("") : `<p class="no-backlinks">읽을 예정인 논문을 추가해 보세요.</p>`;
 
@@ -341,15 +401,19 @@ function renderDashboard() {
     return `<button class="recent-item" data-dashboard-paper="${paper.id}"><span class="recent-date">${label}</span><span><strong>${escapeHtml(paper.title)}</strong><small>${escapeHtml(paper.venue || paper.collection || "미분류")}</small></span></button>`;
   }).join("");
 
-  const categoryCounts = papers.reduce((acc, paper) => { const key = paper.collection || "Unsorted"; acc[key] = (acc[key] || 0) + 1; return acc; }, {});
+  const categoryCounts = papers.reduce((acc, paper) => {
+    const categories = categoriesFor(paper);
+    (categories.length ? categories : ["Unsorted"]).forEach(name => { acc[name] = (acc[name] || 0) + 1; });
+    return acc;
+  }, {});
   const max = Math.max(...Object.values(categoryCounts), 1);
   $("#category-overview-list").innerHTML = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]).map(([name, count]) => `
-    <div class="category-line" data-dashboard-category="${escapeHtml(name)}"><div class="category-line-heading"><span>${escapeHtml(name)}</span><span>${count}</span></div><div class="category-bar"><span style="--width:${count / max * 100}%;--bar-color:${categoryColor(name)}"></span></div></div>`).join("");
+    <div class="category-line" data-dashboard-category="${escapeHtml(name)}"><div class="category-line-heading"><span class="category-badge" style="--category-color:${categoryColor(name)}">${escapeHtml(name)}</span><span>${count}</span></div><div class="category-bar"><span style="--width:${count / max * 100}%;--bar-color:${categoryColor(name)}"></span></div></div>`).join("");
 
   $$('[data-dashboard-paper]').forEach(item => item.addEventListener("click", () => openPaper(item.dataset.dashboardPaper)));
   $$('[data-dashboard-category]').forEach(item => item.addEventListener("click", () => {
     state.collection = item.dataset.dashboardCategory;
-    state.view = papers.some(p => isTopic(p) && p.collection === state.collection) ? "topics" : "library";
+    state.view = papers.some(p => isTopic(p) && categoriesFor(p).includes(state.collection)) ? "topics" : "library";
     setActiveNav(); showLibrary(); render();
   }));
 }
@@ -359,14 +423,13 @@ function renderSidebar() {
   $("#topic-count").textContent = papers.filter(isTopic).length;
   const scopedItems = state.view === "topics" ? papers.filter(isTopic) : state.view === "library" ? papers.filter(p => !isTopic(p)) : papers;
   const counts = scopedItems.reduce((acc, paper) => {
-    const name = paper.collection || "Unsorted";
-    acc[name] = (acc[name] || 0) + 1;
+    const categories = categoriesFor(paper);
+    (categories.length ? categories : ["Unsorted"]).forEach(name => { acc[name] = (acc[name] || 0) + 1; });
     return acc;
   }, {});
   $("#collection-list").innerHTML = Object.entries(counts).sort().map(([name, count]) => `
     <button class="collection-button ${state.collection === name ? "active" : ""}" data-collection="${escapeHtml(name)}" title="${escapeHtml(name)}">
-      <span class="collection-dot" style="--dot:${categoryColor(name)}"></span>
-      <span class="collection-name">${escapeHtml(name)}</span>
+      <span class="collection-name category-badge" style="--category-color:${categoryColor(name)}">${escapeHtml(name)}</span>
       <span class="collection-count">${count}</span>
     </button>`).join("");
   $$(".collection-button").forEach(button => button.addEventListener("click", () => {
@@ -395,12 +458,13 @@ function filteredPapers() {
   return papers.filter(paper => {
     const matchesView = state.view === "topics" ? isTopic(paper) : state.view === "favorites" ? paper.favorite : !isTopic(paper);
     const matchesStatus = state.status === "all" || paper.status === state.status;
-    const matchesCollection = state.collection === "all" || paper.collection === state.collection;
-    const haystack = [paper.title, paper.authors, paper.collection, paper.venue, paper.doi, paper.abstract, ...(paper.tags || [])].join(" ").toLowerCase();
+    const categories = categoriesFor(paper);
+    const matchesCollection = state.collection === "all" || categories.includes(state.collection);
+    const haystack = [paper.title, paper.authors, paper.venue, paper.doi, paper.abstract, ...categories].join(" ").toLowerCase();
     return matchesView && matchesStatus && matchesCollection && (!query || haystack.includes(query));
   }).sort((a, b) => {
     const valueFor = (item, key) => ({
-      category: item.collection,
+      category: categoriesFor(item).join(", "),
       year: item.year,
       authors: item.authors,
       title: item.title,
@@ -435,21 +499,21 @@ function renderPapers() {
         <button class="favorite-button ${paper.favorite ? "active" : ""}" data-favorite="${paper.id}" aria-label="즐겨찾기">${paper.favorite ? "★" : "☆"}</button>
       </div>
       <h2>${escapeHtml(paper.title)}</h2>
-      <p class="card-authors">${isTopic(paper) ? `Study note · ${escapeHtml(paper.collection)}` : `${escapeHtml(paper.authors || "저자 미상")}${paper.venue ? ` · ${escapeHtml(paper.venue)}` : ""}`}</p>
+      <p class="card-authors">${isTopic(paper) ? "Study note" : `${escapeHtml(paper.authors || "저자 미상")}${paper.venue ? ` · ${escapeHtml(paper.venue)}` : ""}`}</p>
       <p class="card-note">${escapeHtml(paper.abstract || paper.note || "아직 작성된 메모가 없습니다.")}</p>
       <footer class="card-footer">
-        ${(paper.tags || []).slice(0, 3).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}
+        <span class="category-list">${categoryBadges(paper, 3)}</span>
         <span class="card-year">${isTopic(paper) ? "NOTE" : paper.year || "—"}</span>
       </footer>
     </article>`).join("");
+  const colWidths = loadColWidths();
   const topicTableMarkup = `
     <table class="paper-table">
-      <thead><tr><th>학습 주제</th><th>카테고리</th><th>키워드</th><th>상태</th><th>최근 수정</th><th></th></tr></thead>
+      ${buildTableHead(TOPIC_COLUMNS, "topic", colWidths)}
       <tbody>${visible.map(topic => `
         <tr class="paper-row" data-id="${topic.id}" tabindex="0">
           <td class="table-title">${escapeHtml(topic.title)}</td>
-          <td><span class="cat-cell" style="--cat:${categoryColor(topic.collection)}">${escapeHtml(topic.collection || "—")}</span></td>
-          <td><div class="table-keywords">${(topic.tags || []).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("") || "—"}</div></td>
+          <td><div class="category-list">${categoryBadges(topic)}</div></td>
           <td><span class="status-badge ${topic.status}">${statusName(topic)}</span></td>
           <td>${new Date(topic.updatedAt).toLocaleDateString("ko-KR")}</td>
           <td><button class="favorite-button ${topic.favorite ? "active" : ""}" data-favorite="${topic.id}" aria-label="즐겨찾기">${topic.favorite ? "★" : "☆"}</button></td>
@@ -458,15 +522,14 @@ function renderPapers() {
     </table>`;
   const paperTableMarkup = `
     <table class="paper-table">
-      <thead><tr><th>논문</th><th>저자</th><th>연도</th><th>발표처</th><th>카테고리</th><th>키워드</th><th>상태</th><th></th></tr></thead>
+      ${buildTableHead(PAPER_COLUMNS, "paper", colWidths)}
       <tbody>${visible.map(paper => `
         <tr class="paper-row" data-id="${paper.id}" tabindex="0">
           <td class="table-title">${escapeHtml(paper.title)}</td>
           <td class="table-authors" title="${escapeHtml(paper.authors || "")}">${escapeHtml(paper.authors || "—")}</td>
           <td>${paper.year || "—"}</td>
           <td>${escapeHtml(paper.venue || "—")}</td>
-          <td><span class="cat-cell" style="--cat:${categoryColor(paper.collection)}">${escapeHtml(paper.collection || "—")}</span></td>
-          <td><div class="table-keywords">${(paper.tags || []).slice(0, 2).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("") || "—"}</div></td>
+          <td><div class="category-list">${categoryBadges(paper)}</div></td>
           <td><span class="status-badge ${paper.status}">${statusName(paper)}</span></td>
           <td><button class="favorite-button ${paper.favorite ? "active" : ""}" data-favorite="${paper.id}" aria-label="즐겨찾기">${paper.favorite ? "★" : "☆"}</button></td>
         </tr>`).join("")}
@@ -480,6 +543,55 @@ function renderPapers() {
     card.addEventListener("keydown", event => { if (event.key === "Enter") openPaper(card.dataset.id); });
   });
   $$('[data-favorite]').forEach(button => button.addEventListener("click", () => toggleFavorite(button.dataset.favorite)));
+  setupColumnResize(grid);
+}
+
+function loadColWidths() {
+  try { return JSON.parse(localStorage.getItem(COL_WIDTHS_KEY)) || {}; }
+  catch { return {}; }
+}
+
+function buildTableHead(columns, tableType, widths) {
+  const cells = columns.map(col => {
+    const cls = col.cls ? ` class="${col.cls}"` : "";
+    if (col.flex) return `<th${cls} data-col="${col.key}">${escapeHtml(col.label)}</th>`;
+    const saved = widths[`${tableType}:${col.key}`];
+    const width = saved ? `${saved}px` : (col.pct ? `${col.pct}%` : `${col.width}px`);
+    const handle = col.fixed ? "" : `<span class="col-resizer"></span>`;
+    return `<th${cls} data-col="${col.key}" style="width:${width}">${escapeHtml(col.label)}${handle}</th>`;
+  }).join("");
+  return `<thead><tr data-table="${tableType}">${cells}</tr></thead>`;
+}
+
+function setupColumnResize(grid) {
+  grid.querySelectorAll(".col-resizer").forEach(handle => {
+    handle.addEventListener("pointerdown", event => {
+      event.preventDefault();
+      const th = handle.closest("th");
+      const tableType = th.parentElement.dataset.table;
+      const colKey = th.dataset.col;
+      const startX = event.clientX;
+      const startWidth = th.offsetWidth;
+      handle.setPointerCapture(event.pointerId);
+      document.body.classList.add("col-resizing");
+      const onMove = moveEvent => {
+        const width = Math.min(900, Math.max(60, startWidth + moveEvent.clientX - startX));
+        th.style.width = `${width}px`;
+      };
+      const onUp = () => {
+        handle.removeEventListener("pointermove", onMove);
+        handle.removeEventListener("pointerup", onUp);
+        handle.removeEventListener("pointercancel", onUp);
+        document.body.classList.remove("col-resizing");
+        const widths = loadColWidths();
+        widths[`${tableType}:${colKey}`] = parseInt(th.style.width, 10);
+        localStorage.setItem(COL_WIDTHS_KEY, JSON.stringify(widths));
+      };
+      handle.addEventListener("pointermove", onMove);
+      handle.addEventListener("pointerup", onUp);
+      handle.addEventListener("pointercancel", onUp);
+    });
+  });
 }
 
 function toggleFavorite(id) {
@@ -512,7 +624,7 @@ function showLibrary() {
   }
   const addingTopic = state.view === "topics";
   $("#add-paper-button").innerHTML = addingTopic ? "<span>＋</span> 새 학습 노트" : "<span>＋</span> 새 논문";
-  $("#search-input").placeholder = addingTopic ? "학습 주제, 카테고리, 키워드 검색..." : "논문, 저자, 태그 검색...";
+  $("#search-input").placeholder = addingTopic ? "학습 주제, 카테고리 검색..." : "논문, 저자, 카테고리 검색...";
   $("#empty-state h2").textContent = addingTopic ? "찾은 학습 주제가 없습니다" : "찾은 논문이 없습니다";
 }
 
@@ -545,9 +657,9 @@ function renderReader(paper) {
   $("#back-button").textContent = isTopic(paper) ? "← Study Notes" : "← Library";
   $("#mentions-title").textContent = isTopic(paper) ? "이 주제를 언급한 노트" : "이 논문을 언급한 노트";
   $("#delete-paper-button").textContent = isTopic(paper) ? "이 학습 노트 삭제" : "이 논문 삭제";
-  $("#reader-meta").innerHTML = `<span>${isTopic(paper) ? "Study note" : escapeHtml(paper.collection || "Unsorted")}</span><span>·</span><span>${statusName(paper)}</span>`;
+  $("#reader-meta").innerHTML = `<span class="category-list">${categoryBadges(paper)}</span><span>·</span><span>${statusName(paper)}</span>`;
   $("#reader-title").textContent = paper.title;
-  $("#reader-authors").textContent = isTopic(paper) ? `${paper.collection} · ${(paper.tags || []).join(" · ")}` : paper.authors || "저자 미상";
+  $("#reader-authors").textContent = isTopic(paper) ? "Study note" : paper.authors || "저자 미상";
   $("#reader-abstract").textContent = paper.abstract || (isTopic(paper) ? "이 주제의 정의와 학습 목표를 기록해 보세요." : "아직 작성된 요약이 없습니다.");
   const link = $("#paper-link");
   link.href = paper.url || "#";
@@ -564,14 +676,12 @@ function renderReader(paper) {
   renderNotePreview(paper.note || "");
   $("#paper-details").innerHTML = isTopic(paper) ? `
     <div class="detail-row"><dt>Type</dt><dd>Study note</dd></div>
-    <div class="detail-row"><dt>Category</dt><dd>${escapeHtml(paper.collection || "Unsorted")}</dd></div>
-    <div class="detail-row"><dt>Status</dt><dd>${statusName(paper)}</dd></div>
-    <div class="detail-row"><dt>Keywords</dt><dd>${(paper.tags || []).map(escapeHtml).join(", ") || "—"}</dd></div>` : `
+    <div class="detail-row"><dt>Categories</dt><dd class="category-list">${categoryBadges(paper)}</dd></div>
+    <div class="detail-row"><dt>Status</dt><dd>${statusName(paper)}</dd></div>` : `
     <div class="detail-row"><dt>Year</dt><dd>${paper.year || "—"}</dd></div>
     <div class="detail-row"><dt>Venue</dt><dd>${escapeHtml(paper.venue || "—")}</dd></div>
-    <div class="detail-row"><dt>Category</dt><dd>${escapeHtml(paper.collection || "Unsorted")}</dd></div>
+    <div class="detail-row"><dt>Categories</dt><dd class="category-list">${categoryBadges(paper)}</dd></div>
     <div class="detail-row"><dt>Status</dt><dd>${statusName(paper)}</dd></div>
-    <div class="detail-row"><dt>Keywords</dt><dd>${(paper.tags || []).map(escapeHtml).join(", ") || "—"}</dd></div>
     <div class="detail-row"><dt>Identifier</dt><dd>${escapeHtml(paper.doi || "—")}</dd></div>`;
   renderBacklinks(paper);
 }
@@ -774,9 +884,8 @@ function openDialog(paper = null) {
     $("#paper-year-input").value = paper.year || "";
     $("#paper-venue-input").value = paper.venue || "";
     $("#paper-doi-input").value = paper.doi || "";
-    $("#paper-collection-input").value = paper.collection || "";
+    $("#paper-collection-input").value = categoriesFor(paper).join(", ");
     $("#paper-status-input").value = paper.status || "not-yet";
-    $("#paper-tags-input").value = (paper.tags || []).join(", ");
     $("#paper-url-input").value = paper.url || "";
     $("#paper-abstract-input").value = paper.abstract || "";
   }
@@ -790,15 +899,16 @@ function saveForm(event) {
   const existing = papers.find(p => p.id === existingId);
   const type = existing?.type || $("#content-type").value || "paper";
   const title = $("#paper-title-input").value.trim();
+  const categories = [...new Set($("#paper-collection-input").value.split(",").map(value => value.trim()).filter(Boolean))];
   const data = {
     id: existing?.id || slugify(title), type, title,
     authors: $("#paper-authors-input").value.trim(),
     year: Number($("#paper-year-input").value) || null,
     venue: $("#paper-venue-input").value.trim(),
     doi: $("#paper-doi-input").value.trim(),
-    collection: $("#paper-collection-input").value.trim() || "Unsorted",
+    collection: categories[0] || "Unsorted",
     status: $("#paper-status-input").value,
-    tags: $("#paper-tags-input").value.split(",").map(tag => tag.trim()).filter(Boolean),
+    tags: categories.slice(1),
     url: $("#paper-url-input").value.trim(),
     abstract: $("#paper-abstract-input").value.trim(),
     note: existing?.note || "", favorite: existing?.favorite || false,

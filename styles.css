@@ -37,8 +37,8 @@ svg { width: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-l
 .sidebar-section > .eyebrow { padding: 0 11px; }
 .collection-button { border: 0; background: none; display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 11px; border-radius: 7px; font-size: 13px; cursor: pointer; color: #6f7168; min-width: 0; text-align: left; }
 .collection-button:hover, .collection-button.active { color: var(--ink); background: rgba(255,255,255,.4); }
-.collection-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dot, #8b8c82); flex-shrink: 0; }
 .collection-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.collection-name.category-badge { flex: 0 1 auto; font-size: 11px; }
 .collection-count { margin-left: auto; font-size: 11px; color: #999a91; flex-shrink: 0; }
 .sidebar-bottom { margin-top: auto; padding-top: 24px; border-top: 1px solid #dad8cf; }
 .utility-button { padding-block: 7px; font-size: 12px; }
@@ -78,7 +78,7 @@ svg { width: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-l
 .featured-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 .progress-rail { width: 4px; border-radius: 5px; background: #e9e6dd; position: relative; overflow: hidden; }
 .progress-rail::after { content: ""; position: absolute; inset: auto 0 0; height: var(--progress); background: var(--accent); border-radius: 5px; }
-.featured-meta { display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+.featured-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
 .featured-card h3 { font: 21px/1.28 Georgia, serif; margin: 13px 0 8px; }
 .featured-card p { color: var(--muted); font-size: 11px; margin: 0; }
 .dashboard-bottom-grid { display: grid; grid-template-columns: 1.4fr .6fr; gap: 60px; }
@@ -136,26 +136,28 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
 .status-badge.not-yet { color: #c0392b; }
 .status-badge.on-going { color: #d4850a; }
 .status-badge.done { color: #2d8a57; }
-.cat-cell { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-.cat-cell::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--cat, #8b8c82); flex-shrink: 0; }
+.category-list { display: inline-flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.category-badge { display: inline-flex; align-items: center; max-width: 100%; padding: 4px 8px; border-radius: 5px; background: var(--category-color, #6b7a8d); color: #fff; font-size: 10px; font-weight: 650; line-height: 1.2; letter-spacing: 0; text-transform: none; white-space: nowrap; }
 .favorite-button, .icon-button { border: 0; background: transparent; color: #aaa99f; font-size: 21px; line-height: 1; cursor: pointer; padding: 0; }
 .favorite-button.active, .favorite-large.active { color: var(--accent); }
 .paper-card h2 { margin: 23px 0 10px; font: 500 21px/1.22 Georgia, serif; letter-spacing: -.018em; }
 .card-authors { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .card-note { color: #686a61; font-size: 12px; line-height: 1.55; margin: 17px 0 20px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .card-footer { margin-top: auto; border-top: 1px solid #ebe9e2; padding-top: 16px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.tag { font-size: 10px; color: #696b62; background: #efede6; border-radius: 20px; padding: 4px 8px; }
 .card-year { margin-left: auto; color: #aaa99f; font: 12px Georgia, serif; }
 .paper-grid.table { display: block; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--white); }
-.paper-table { width: 100%; border-collapse: collapse; min-width: 840px; text-align: left; }
-.paper-table th { padding: 12px 16px; background: #efede6; border-bottom: 1px solid var(--line); color: #85867d; font-size: 9px; letter-spacing: .09em; text-transform: uppercase; font-weight: 700; }
-.paper-table td { padding: 15px 16px; border-bottom: 1px solid #e9e7e0; color: #5f6159; font-size: 11px; vertical-align: middle; }
+.paper-table { border-collapse: collapse; table-layout: fixed; width: 100%; min-width: 680px; text-align: left; }
+.paper-table th { position: relative; padding: 12px 16px; background: #efede6; border-bottom: 1px solid var(--line); color: #85867d; font-size: 9px; letter-spacing: .09em; text-transform: uppercase; font-weight: 700; }
+.paper-table td { padding: 15px 16px; border-bottom: 1px solid #e9e7e0; color: #5f6159; font-size: 11px; vertical-align: middle; overflow: hidden; text-overflow: ellipsis; }
 .paper-table tbody tr:last-child td { border-bottom: 0; }
 .paper-table tbody tr { cursor: pointer; transition: background .15s; }
 .paper-table tbody tr:hover { background: #f7f4ed; }
-.paper-table .table-title { color: var(--ink); font: 14px/1.35 Georgia, serif; max-width: 360px; }
-.paper-table .table-authors { max-width: 210px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.paper-table .table-keywords { display: flex; gap: 4px; flex-wrap: wrap; }
+.paper-table .table-title { color: var(--ink); font: 14px/1.35 Georgia, serif; }
+.paper-table .col-resizer { position: absolute; top: 0; right: -5px; width: 11px; height: 100%; cursor: col-resize; touch-action: none; z-index: 2; }
+.paper-table .col-resizer::after { content: ""; position: absolute; top: 25%; bottom: 25%; left: 5px; width: 2px; border-radius: 2px; background: transparent; transition: background .15s; }
+.paper-table th:hover .col-resizer::after, .paper-table .col-resizer:active::after { background: #b9b6aa; }
+body.col-resizing { cursor: col-resize; user-select: none; }
+.paper-table .table-authors { font-size: 10px; color: #84867c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .paper-table .favorite-button { font-size: 18px; }
 .empty-state { text-align: center; padding: 90px 20px; color: var(--muted); }
 .empty-state span { font: 40px Georgia, serif; }

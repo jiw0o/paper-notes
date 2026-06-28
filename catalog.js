@@ -16,7 +16,8 @@ const curatedPaperCatalog = [
     "year": 2024,
     "venue": "ICML 2024 (Oral)",
     "doi": "arXiv:2402.14528",
-    "url": "https://arxiv.org/abs/2402.14528"
+    "url": "https://arxiv.org/abs/2402.14528",
+    "categories": ["Causality", "Reinforcement Learning"]
   },
   {
     "title": "APT: Action Expert Pretraining Improves Instruction Generalization of Vision-Language-Action Policies",
@@ -30,7 +31,8 @@ const curatedPaperCatalog = [
     "year": 2026,
     "venue": "Preprint (arXiv)",
     "doi": "arXiv:2606.12366",
-    "url": "https://arxiv.org/abs/2606.12366"
+    "url": "https://arxiv.org/abs/2606.12366",
+    "categories": ["VLA"]
   },
   {
     "title": "Being-H0.5: Scaling Human-Centric Robot Learning for Cross-Embodiment Generalization",
@@ -51,7 +53,8 @@ const curatedPaperCatalog = [
     "year": 2026,
     "venue": "Preprint (arXiv)",
     "doi": "arXiv:2601.12993",
-    "url": "https://arxiv.org/abs/2601.12993"
+    "url": "https://arxiv.org/abs/2601.12993",
+    "categories": ["Humanoid", "VLA"]
   },
   {
     "title": "Being-H0.7: A Latent World-Action Model from Egocentric Videos",
@@ -69,7 +72,8 @@ const curatedPaperCatalog = [
     "year": 2026,
     "venue": "Preprint (arXiv)",
     "doi": "arXiv:2605.00078",
-    "url": "https://arxiv.org/abs/2605.00078"
+    "url": "https://arxiv.org/abs/2605.00078",
+    "categories": ["WAM", "Latent Action"]
   },
   {
     "title": "Bridging the Morphology Gap: Adapting VLA Models to Dexterous Manipulation via Intent-Conditioned Fine-Tuning",
@@ -84,7 +88,8 @@ const curatedPaperCatalog = [
     "year": 2026,
     "venue": "Preprint (arXiv)",
     "doi": "arXiv:2606.12109",
-    "url": "https://arxiv.org/abs/2606.12109"
+    "url": "https://arxiv.org/abs/2606.12109",
+    "categories": ["VLA", "Dexterous Manipulation"]
   },
   {
     "title": "CAIMAN: Causal Action Influence Detection for Sample Efficient Loco-manipulation",
@@ -97,7 +102,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "CoRL 2025 Workshop",
     "doi": "arXiv:2502.00835",
-    "url": "https://arxiv.org/abs/2502.00835"
+    "url": "https://arxiv.org/abs/2502.00835",
+    "categories": ["Causality", "Loco-Manipulation"]
   },
   {
     "title": "CDL: Causal Dynamics Learning for Task-Independent State Abstraction",
@@ -111,7 +117,8 @@ const curatedPaperCatalog = [
     "year": 2022,
     "venue": "ICML 2022",
     "doi": "arXiv:2206.13452",
-    "url": "https://arxiv.org/abs/2206.13452"
+    "url": "https://arxiv.org/abs/2206.13452",
+    "categories": ["Causality", "World Model"]
   },
   {
     "title": "CIP: Causal Information Prioritization for Efficient Reinforcement Learning",
@@ -125,7 +132,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "ICLR 2025",
     "doi": "arXiv:2502.10097",
-    "url": "https://arxiv.org/abs/2502.10097"
+    "url": "https://arxiv.org/abs/2502.10097",
+    "categories": ["Causality", "Reinforcement Learning"]
   },
   {
     "title": "Curiosity-Driven Learning of Joint Locomotion and Manipulation Tasks",
@@ -139,7 +147,8 @@ const curatedPaperCatalog = [
     "year": 2023,
     "venue": "CoRL 2023",
     "doi": "PMLR 229:2594–2610",
-    "url": "https://proceedings.mlr.press/v229/schwarke23a.html"
+    "url": "https://proceedings.mlr.press/v229/schwarke23a.html",
+    "categories": ["Loco-Manipulation", "Reinforcement Learning"]
   },
   {
     "title": "DIAYN: Diversity Is All You Need (Learning Skills without a Reward Function)",
@@ -152,7 +161,8 @@ const curatedPaperCatalog = [
     "year": 2019,
     "venue": "ICLR 2019",
     "doi": "arXiv:1802.06070",
-    "url": "https://arxiv.org/abs/1802.06070"
+    "url": "https://arxiv.org/abs/1802.06070",
+    "categories": ["Skill Discovery", "Reinforcement Learning"]
   },
   {
     "title": "DreamGen: Unlocking Generalization in Robot Learning through Video World Models",
@@ -189,7 +199,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "CoRL 2025",
     "doi": "arXiv:2505.12705",
-    "url": "https://arxiv.org/abs/2505.12705"
+    "url": "https://arxiv.org/abs/2505.12705",
+    "categories": ["World Model"]
   },
   {
     "title": "DSRL: Steering Your Diffusion Policy with Latent Space Reinforcement Learning",
@@ -206,7 +217,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "CoRL 2025",
     "doi": "arXiv:2506.15799",
-    "url": "https://arxiv.org/abs/2506.15799"
+    "url": "https://arxiv.org/abs/2506.15799",
+    "categories": ["Diffusion Policy", "Steering", "Reinforcement Learning"]
   },
   {
     "title": "DUSDi: Disentangled Unsupervised Skill Discovery for Efficient Hierarchical Reinforcement Learning",
@@ -219,7 +231,8 @@ const curatedPaperCatalog = [
     "year": 2024,
     "venue": "NeurIPS 2024",
     "doi": "arXiv:2410.11251",
-    "url": "https://arxiv.org/abs/2410.11251"
+    "url": "https://arxiv.org/abs/2410.11251",
+    "categories": ["Skill Discovery", "Reinforcement Learning"]
   },
   {
     "title": "DynaMo: In-Domain Dynamics Pretraining for Visuo-Motor Control",
@@ -233,7 +246,8 @@ const curatedPaperCatalog = [
     "year": 2024,
     "venue": "NeurIPS 2024",
     "doi": "arXiv:2409.12192",
-    "url": "https://arxiv.org/abs/2409.12192"
+    "url": "https://arxiv.org/abs/2409.12192",
+    "categories": ["World Model"]
   },
   {
     "title": "Efficient Manipulation-Enhanced Semantic Mapping With Uncertainty-Informed Action Selection",
@@ -246,7 +260,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "Humanoids 2025",
     "doi": "arXiv:2506.02286",
-    "url": "https://arxiv.org/abs/2506.02286"
+    "url": "https://arxiv.org/abs/2506.02286",
+    "categories": ["Risk & Uncertainty", "Spatial Reasoning"]
   },
   {
     "title": "Estimating Risk and Uncertainty in Deep Reinforcement Learning",
@@ -260,7 +275,8 @@ const curatedPaperCatalog = [
     "year": 2020,
     "venue": "ICML 2020 Workshop",
     "doi": "arXiv:1905.09638",
-    "url": "https://arxiv.org/abs/1905.09638"
+    "url": "https://arxiv.org/abs/1905.09638",
+    "categories": ["Risk & Uncertainty", "Reinforcement Learning"]
   },
   {
     "title": "FLARE: Robot Learning with Implicit World Modeling",
@@ -290,7 +306,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "CoRL 2025",
     "doi": "arXiv:2505.15659",
-    "url": "https://arxiv.org/abs/2505.15659"
+    "url": "https://arxiv.org/abs/2505.15659",
+    "categories": ["World Model", "VLA"]
   },
   {
     "title": "Flow Matching Policy Gradients",
@@ -307,7 +324,8 @@ const curatedPaperCatalog = [
     "year": 2026,
     "venue": "ICLR 2026",
     "doi": "arXiv:2507.21053",
-    "url": "https://arxiv.org/abs/2507.21053"
+    "url": "https://arxiv.org/abs/2507.21053",
+    "categories": ["Reinforcement Learning", "Diffusion Policy"]
   },
   {
     "title": "From Intention to Execution: Probing the Generalization Boundaries of Vision-Language-Action Models",
@@ -320,7 +338,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "Preprint (arXiv, under review)",
     "doi": "arXiv:2506.09930",
-    "url": "https://arxiv.org/abs/2506.09930"
+    "url": "https://arxiv.org/abs/2506.09930",
+    "categories": ["VLA", "Benchmark"]
   },
   {
     "title": "GENE-26.5: Advancing Robotic Manipulation to Human Level",
@@ -330,7 +349,8 @@ const curatedPaperCatalog = [
     "year": 2026,
     "venue": "Technical Report (Genesis AI)",
     "doi": "",
-    "url": "https://www.genesis.ai/blog/gene-26-5-advancing-robotic-manipulation-to-human-level"
+    "url": "https://www.genesis.ai/blog/gene-26-5-advancing-robotic-manipulation-to-human-level",
+    "categories": ["VLA", "Dexterous Manipulation"]
   },
   {
     "title": "Genie: Generative Interactive Environments",
@@ -364,7 +384,8 @@ const curatedPaperCatalog = [
     "year": 2024,
     "venue": "ICML 2024",
     "doi": "arXiv:2402.15391",
-    "url": "https://arxiv.org/abs/2402.15391"
+    "url": "https://arxiv.org/abs/2402.15391",
+    "categories": ["World Model"]
   },
   {
     "title": "Guided Reinforcement Learning for Robust Multi-Contact Loco-Manipulation",
@@ -376,7 +397,8 @@ const curatedPaperCatalog = [
     "year": 2024,
     "venue": "CoRL 2024 (Oral)",
     "doi": "arXiv:2410.13817",
-    "url": "https://arxiv.org/abs/2410.13817"
+    "url": "https://arxiv.org/abs/2410.13817",
+    "categories": ["Loco-Manipulation", "Reinforcement Learning"]
   },
   {
     "title": "HumanoidGen: Data Generation for Bimanual Dexterous Manipulation via LLM Reasoning",
@@ -391,7 +413,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "NeurIPS 2025",
     "doi": "arXiv:2507.00833",
-    "url": "https://arxiv.org/abs/2507.00833"
+    "url": "https://arxiv.org/abs/2507.00833",
+    "categories": ["Humanoid", "Dexterous Manipulation", "Benchmark"]
   },
   {
     "title": "Improving Vision-Language-Action Model with Online Reinforcement Learning",
@@ -407,7 +430,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "ICRA 2025",
     "doi": "arXiv:2501.16664",
-    "url": "https://arxiv.org/abs/2501.16664"
+    "url": "https://arxiv.org/abs/2501.16664",
+    "categories": ["VLA", "Reinforcement Learning"]
   },
   {
     "title": "LAPA: Latent Action Pretraining From Videos",
@@ -432,7 +456,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "ICLR 2025",
     "doi": "arXiv:2410.11758",
-    "url": "https://arxiv.org/abs/2410.11758"
+    "url": "https://arxiv.org/abs/2410.11758",
+    "categories": ["Latent Action", "VLA"]
   },
   {
     "title": "LAPO: Learning to Act Without Actions",
@@ -443,7 +468,8 @@ const curatedPaperCatalog = [
     "year": 2024,
     "venue": "ICLR 2024 (Spotlight)",
     "doi": "arXiv:2312.10812",
-    "url": "https://arxiv.org/abs/2312.10812"
+    "url": "https://arxiv.org/abs/2312.10812",
+    "categories": ["Latent Action"]
   },
   {
     "title": "Latent Policy Barrier: Learning Robust Visuomotor Policies by Staying In-Distribution",
@@ -454,7 +480,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "Preprint (arXiv)",
     "doi": "arXiv:2508.05941",
-    "url": "https://arxiv.org/abs/2508.05941"
+    "url": "https://arxiv.org/abs/2508.05941",
+    "categories": ["World Model", "Diffusion Policy"]
   },
   {
     "title": "Learning Risk-Aware Quadrupedal Locomotion using Distributional Reinforcement Learning",
@@ -467,7 +494,8 @@ const curatedPaperCatalog = [
     "year": 2024,
     "venue": "ICRA 2024",
     "doi": "arXiv:2309.14246",
-    "url": "https://arxiv.org/abs/2309.14246"
+    "url": "https://arxiv.org/abs/2309.14246",
+    "categories": ["Risk & Uncertainty", "Loco-Manipulation", "Reinforcement Learning"]
   },
   {
     "title": "Mimic Intent, Not Just Trajectories",
@@ -482,7 +510,8 @@ const curatedPaperCatalog = [
     "year": 2026,
     "venue": "Preprint (arXiv)",
     "doi": "arXiv:2602.08602",
-    "url": "https://arxiv.org/abs/2602.08602"
+    "url": "https://arxiv.org/abs/2602.08602",
+    "categories": ["Latent Action"]
   },
   {
     "title": "RL Token: Bootstrapping Online RL with Vision-Language-Action Models",
@@ -498,7 +527,8 @@ const curatedPaperCatalog = [
     "year": 2026,
     "venue": "Preprint (arXiv)",
     "doi": "arXiv:2604.23073",
-    "url": "https://arxiv.org/abs/2604.23073"
+    "url": "https://arxiv.org/abs/2604.23073",
+    "categories": ["VLA", "Reinforcement Learning"]
   },
   {
     "title": "RLDX-1 Technical Report",
@@ -575,7 +605,8 @@ const curatedPaperCatalog = [
     "year": 2026,
     "venue": "Technical Report",
     "doi": "arXiv:2605.03269",
-    "url": "https://arxiv.org/abs/2605.03269"
+    "url": "https://arxiv.org/abs/2605.03269",
+    "categories": ["VLA", "Reinforcement Learning"]
   },
   {
     "title": "SimpleVLA-RL: Scaling VLA Training via Reinforcement Learning",
@@ -605,7 +636,8 @@ const curatedPaperCatalog = [
     "year": 2026,
     "venue": "ICLR 2026",
     "doi": "arXiv:2509.09674",
-    "url": "https://arxiv.org/abs/2509.09674"
+    "url": "https://arxiv.org/abs/2509.09674",
+    "categories": ["VLA", "Reinforcement Learning"]
   },
   {
     "title": "Simulation Distillation: Pretraining World Models in Simulation for Rapid Real-World Adaptation",
@@ -623,7 +655,8 @@ const curatedPaperCatalog = [
     "year": 2026,
     "venue": "RSS 2026",
     "doi": "arXiv:2603.15759",
-    "url": "https://arxiv.org/abs/2603.15759"
+    "url": "https://arxiv.org/abs/2603.15759",
+    "categories": ["World Model"]
   },
   {
     "title": "SkiLD: Unsupervised Skill Discovery Guided by Factor Interactions",
@@ -640,7 +673,8 @@ const curatedPaperCatalog = [
     "year": 2024,
     "venue": "NeurIPS 2024",
     "doi": "arXiv:2410.18416",
-    "url": "https://arxiv.org/abs/2410.18416"
+    "url": "https://arxiv.org/abs/2410.18416",
+    "categories": ["Skill Discovery"]
   },
   {
     "title": "SLAC: Simulation-Pretrained Latent Action Space for Whole-Body Real-World RL",
@@ -652,7 +686,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "CoRL 2025",
     "doi": "arXiv:2506.04147",
-    "url": "https://arxiv.org/abs/2506.04147"
+    "url": "https://arxiv.org/abs/2506.04147",
+    "categories": ["Latent Action", "Loco-Manipulation", "Reinforcement Learning"]
   },
   {
     "title": "SpatialPIN: Enhancing Spatial Reasoning Capabilities of Vision-Language Models through Prompting and Interacting 3D Priors",
@@ -666,7 +701,8 @@ const curatedPaperCatalog = [
     "year": 2024,
     "venue": "NeurIPS 2024",
     "doi": "arXiv:2403.13438",
-    "url": "https://arxiv.org/abs/2403.13438"
+    "url": "https://arxiv.org/abs/2403.13438",
+    "categories": ["Spatial Reasoning", "VLM"]
   },
   {
     "title": "SpatialVLA: Exploring Spatial Representations for Visual-Language-Action Model",
@@ -686,7 +722,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "RSS 2025",
     "doi": "arXiv:2501.15830",
-    "url": "https://arxiv.org/abs/2501.15830"
+    "url": "https://arxiv.org/abs/2501.15830",
+    "categories": ["Spatial Reasoning", "VLA"]
   },
   {
     "title": "VLAs are Confined yet Capable of Generalizing to Novel Instructions",
@@ -696,7 +733,52 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "Preprint (arXiv)",
     "doi": "arXiv:2505.03500",
-    "url": "https://arxiv.org/abs/2505.03500"
+    "url": "https://arxiv.org/abs/2505.03500",
+    "categories": ["VLA", "Benchmark"]
+  },
+  {
+    "title": "T-Rex: Tactile-Reactive Dexterous Manipulation",
+    "authors": [
+      "Dantong Niu",
+      "Zhuoyang Liu",
+      "Zekai Wang",
+      "Boning Shao",
+      "Zhao-Heng Yin",
+      "Anirudh Pai",
+      "Yuvan Sharma",
+      "Stefano Saravalle",
+      "Ruijie Zheng",
+      "Jing Wang",
+      "Ryan Punamiya",
+      "Mengda Xu",
+      "Yuqi Xie",
+      "Yunfan Jiang",
+      "Letian Fu",
+      "Konstantinos Kallidromitis",
+      "Matteo Gioia",
+      "Junyi Zhang",
+      "Jiaxin Ge",
+      "Haiwen Feng",
+      "Fabio Galasso",
+      "Wei Zhan",
+      "David M. Chan",
+      "Yutong Bai",
+      "Roei Herzig",
+      "Jiahui Lei",
+      "Fei-Fei Li",
+      "Ken Goldberg",
+      "Jitendra Malik",
+      "Pieter Abbeel",
+      "Yuke Zhu",
+      "Danfei Xu",
+      "Jim (Linxi) Fan",
+      "Trevor Darrell"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2606.17055",
+    "url": "https://arxiv.org/abs/2606.17055",
+    "categories": ["Dexterous Manipulation"]
   },
   {
     "title": "TICSA: Task-Independent Causal State Abstraction",
@@ -709,7 +791,8 @@ const curatedPaperCatalog = [
     "year": 2021,
     "venue": "NeurIPS 2021 Workshop",
     "doi": "",
-    "url": "https://www.cs.utexas.edu/~xiao/papers/ticsa.pdf"
+    "url": "https://www.cs.utexas.edu/~xiao/papers/ticsa.pdf",
+    "categories": ["Causality", "Reinforcement Learning"]
   },
   {
     "title": "TwinBrainVLA: Unleashing the Potential of Generalist VLMs for Embodied Tasks via Asymmetric Mixture-of-Transformers",
@@ -729,7 +812,8 @@ const curatedPaperCatalog = [
     "year": 2026,
     "venue": "Preprint (arXiv)",
     "doi": "arXiv:2601.14133",
-    "url": "https://arxiv.org/abs/2601.14133"
+    "url": "https://arxiv.org/abs/2601.14133",
+    "categories": ["VLA", "VLM"]
   },
   {
     "title": "UniVLA: Learning to Act Anywhere with Task-centric Latent Actions",
@@ -746,7 +830,8 @@ const curatedPaperCatalog = [
     "year": 2025,
     "venue": "RSS 2025",
     "doi": "arXiv:2505.06111",
-    "url": "https://arxiv.org/abs/2505.06111"
+    "url": "https://arxiv.org/abs/2505.06111",
+    "categories": ["VLA", "Latent Action"]
   },
   {
     "title": "Visual Adversarial Examples Jailbreak Aligned Large Language Models",
@@ -761,45 +846,63 @@ const curatedPaperCatalog = [
     "year": 2024,
     "venue": "AAAI 2024",
     "doi": "arXiv:2306.13213",
-    "url": "https://arxiv.org/abs/2306.13213"
+    "url": "https://arxiv.org/abs/2306.13213",
+    "categories": ["Safety", "VLM"]
+  },
+  {
+    "title": "Tactile Genesis: Exploring Tactile Sensors at Scale for Learning Dexterous Tasks",
+    "authors": [
+      "Trinity Chung",
+      "Kashu Yamazaki",
+      "Dhruv Patel",
+      "Alexis Duburcq",
+      "Yiling Qiao",
+      "Katerina Fragkiadaki",
+      "Aran Nayebi"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2606.22332",
+    "url": "https://arxiv.org/abs/2606.22332",
+    "categories": ["Dexterous Manipulation"]
   }
 ];
 
 const studyTopicCatalog = [
-  { title: "Bayesian Inference Methods", collection: "Probabilistic ML", tags: ["Bayesian Inference", "Probability"] },
-  { title: "ENN: Evidential Neural Network", collection: "Probabilistic ML", tags: ["Uncertainty", "Deep Learning"] },
-  { title: "Empowerment", collection: "RL Foundations", tags: ["Intrinsic Motivation", "Information Theory"] },
-  { title: "Baseline & Actor-Critic", collection: "RL Foundations", tags: ["Actor-Critic", "Variance Reduction"] },
-  { title: "Bellman Equation", collection: "RL Foundations", tags: ["Dynamic Programming", "Value Function"] },
-  { title: "GAE: Generalized Advantage Estimation", collection: "RL Foundations", tags: ["Advantage Estimation", "Policy Gradient"] },
-  { title: "Policy Gradient Theorem", collection: "RL Foundations", tags: ["Policy Gradient", "RL Theory"] },
-  { title: "SCM: Structural Causal Model", collection: "Causal Inference", tags: ["Causality", "Graphical Model"] },
-  { title: "Uncertainty-Aware RL", collection: "Probabilistic ML", tags: ["Uncertainty", "Reinforcement Learning"] },
-  { title: "GQA: Grouped Query Attention", collection: "Transformers", tags: ["Attention", "LLM Architecture"] },
-  { title: "Transformer Architecture", collection: "Transformers", tags: ["Attention", "Architecture"] },
-  { title: "Transformer-based Diffusion", collection: "Generative Models", tags: ["Transformer", "Diffusion"] },
-  { title: "JAX remat & scan", collection: "Engineering & Tools", tags: ["JAX", "Memory Optimization"] },
-  { title: "JAX vs PyTorch", collection: "Engineering & Tools", tags: ["JAX", "PyTorch"] },
-  { title: "SimplerEnv", collection: "Engineering & Tools", tags: ["Robot Learning", "Evaluation"] },
-  { title: "Conditional, Joint, Marginal Distribution", collection: "Probability & Information", tags: ["Probability", "Distribution"] },
-  { title: "Kullback–Leibler (KL) Divergence", collection: "Probability & Information", tags: ["KL Divergence", "Information Theory"] },
-  { title: "Mutual Information", collection: "Probability & Information", tags: ["Information Theory", "Dependence"] },
-  { title: "Shannon Entropy", collection: "Probability & Information", tags: ["Entropy", "Information Theory"] },
-  { title: "DQN: Deep Q-Network", collection: "RL Algorithms", tags: ["Value-Based RL", "Q-Learning"] },
-  { title: "PPO: Proximal Policy Optimization", collection: "RL Algorithms", tags: ["Policy Gradient", "On-Policy RL"] },
-  { title: "REINFORCE", collection: "RL Algorithms", tags: ["Monte Carlo", "Policy Gradient"] },
-  { title: "SAC: Soft Actor-Critic", collection: "RL Algorithms", tags: ["Actor-Critic", "Maximum Entropy RL"] },
-  { title: "Diffusion Model", collection: "Generative Models", tags: ["Diffusion", "Score Matching"] },
-  { title: "GAN: Generative Adversarial Network", collection: "Generative Models", tags: ["GAN", "Adversarial Learning"] },
-  { title: "Generative Model", collection: "Generative Models", tags: ["Generative Modeling", "Probability"] },
-  { title: "VAE: Variational Autoencoder", collection: "Generative Models", tags: ["Variational Inference", "Latent Variable"] },
-  { title: "JEPA: Joint Embedding Predictive Architecture", collection: "Generative Models", tags: ["Representation Learning", "World Model"] },
-  { title: "VQ-VAE: Vector Quantized Variational Autoencoder", collection: "Generative Models", tags: ["Discrete Latent", "VAE"] },
-  { title: "Pi0 Code Study", collection: "VLA", tags: ["Pi0", "Code Study", "JAX"] },
-  { title: "Pi0.5", collection: "VLA", tags: ["Pi0", "VLA", "Hierarchical Inference"] },
-  { title: "PI0.6", collection: "VLA", tags: ["Pi0", "VLA", "Knowledge Insulation"] },
-  { title: "GR00T-N1", collection: "VLA", tags: ["GR00T", "VLA", "Cross-Embodiment"] },
-  { title: "GR00T-N1.5", collection: "VLA", tags: ["GR00T", "VLA", "FLARE"] },
-  { title: "GR00T-N1.6", collection: "VLA", tags: ["GR00T", "VLA", "Vision-Language Grounding"] },
-  { title: "Cosmos 3", collection: "World Models", tags: ["Cosmos", "World Model"] }
+  { title: "Bayesian Inference Methods", collection: "Bayesian", tags: ["Statistics"] },
+  { title: "ENN: Evidential Neural Network", collection: "Bayesian", tags: ["Representation Learning"] },
+  { title: "Empowerment", collection: "Reinforcement Learning", tags: [] },
+  { title: "Baseline & Actor-Critic", collection: "Reinforcement Learning", tags: ["RL Algorithms"] },
+  { title: "Bellman Equation", collection: "Reinforcement Learning", tags: [] },
+  { title: "GAE: Generalized Advantage Estimation", collection: "Reinforcement Learning", tags: ["RL Algorithms"] },
+  { title: "Policy Gradient Theorem", collection: "Reinforcement Learning", tags: [] },
+  { title: "SCM: Structural Causal Model", collection: "Statistics", tags: [] },
+  { title: "Uncertainty-Aware RL", collection: "Bayesian", tags: ["Reinforcement Learning"] },
+  { title: "GQA: Grouped Query Attention", collection: "Transformer", tags: [] },
+  { title: "Transformer Architecture", collection: "Transformer", tags: [] },
+  { title: "Transformer-based Diffusion", collection: "Transformer", tags: ["Generative AI"] },
+  { title: "JAX remat & scan", collection: "Code", tags: [] },
+  { title: "JAX vs PyTorch", collection: "Code", tags: [] },
+  { title: "SimplerEnv", collection: "Code", tags: ["VLA"] },
+  { title: "Conditional, Joint, Marginal Distribution", collection: "Statistics", tags: [] },
+  { title: "Kullback–Leibler (KL) Divergence", collection: "Statistics", tags: [] },
+  { title: "Mutual Information", collection: "Statistics", tags: ["Representation Learning"] },
+  { title: "Shannon Entropy", collection: "Statistics", tags: [] },
+  { title: "DQN: Deep Q-Network", collection: "Reinforcement Learning", tags: ["RL Algorithms"] },
+  { title: "PPO: Proximal Policy Optimization", collection: "Reinforcement Learning", tags: ["RL Algorithms"] },
+  { title: "REINFORCE", collection: "Reinforcement Learning", tags: ["RL Algorithms"] },
+  { title: "SAC: Soft Actor-Critic", collection: "Reinforcement Learning", tags: ["RL Algorithms"] },
+  { title: "Diffusion Model", collection: "Generative AI", tags: [] },
+  { title: "GAN: Generative Adversarial Network", collection: "Generative AI", tags: [] },
+  { title: "Generative Model", collection: "Generative AI", tags: [] },
+  { title: "VAE: Variational Autoencoder", collection: "Generative AI", tags: ["Bayesian", "Representation Learning"] },
+  { title: "JEPA: Joint Embedding Predictive Architecture", collection: "Representation Learning", tags: [] },
+  { title: "VQ-VAE: Vector Quantized Variational Autoencoder", collection: "Generative AI", tags: ["Representation Learning"] },
+  { title: "Pi0 Code Study", collection: "VLA", tags: ["Code"] },
+  { title: "Pi0.5", collection: "VLA", tags: [] },
+  { title: "PI0.6", collection: "VLA", tags: [] },
+  { title: "GR00T-N1", collection: "VLA", tags: [] },
+  { title: "GR00T-N1.5", collection: "VLA", tags: [] },
+  { title: "GR00T-N1.6", collection: "VLA", tags: [] },
+  { title: "Cosmos 3", collection: "Generative AI", tags: ["Representation Learning"] }
 ];

@@ -226,8 +226,8 @@
         <label>저자 <input id="paper-authors-input" placeholder="Vaswani et al."></label>
         <label>발행 연도 <input id="paper-year-input" type="number" min="1900" max="2100" placeholder="2024"></label>
       </div>
-      <div class="form-row paper-only">
-        <label>카테고리 <input id="paper-collection-input" placeholder="Language models"></label>
+      <div class="form-row">
+        <label>카테고리 <input id="paper-collection-input" placeholder="VLA, Robot Learning"><small>쉼표로 여러 개 지정할 수 있습니다.</small></label>
         <label>상태
           <select id="paper-status-input">
             <option value="not-yet">Not Yet</option>
@@ -240,7 +240,6 @@
         <label>출간처 <input id="paper-venue-input" placeholder="NeurIPS, CVPR, Nature..."></label>
         <label>DOI / 식별자 <input id="paper-doi-input" placeholder="10.1000/xyz 또는 arXiv ID"></label>
       </div>
-      <label>키워드 <input id="paper-tags-input" placeholder="Transformer, NLP, Foundation model"><small>쉼표로 구분하세요.</small></label>
       <label class="paper-only">논문 링크 <input id="paper-url-input" type="url" placeholder="https://arxiv.org/abs/..."></label>
       <label>한 줄 요약 <textarea id="paper-abstract-input" rows="3" placeholder="이 논문을 기억해야 하는 이유"></textarea></label>
       <div class="dialog-actions">

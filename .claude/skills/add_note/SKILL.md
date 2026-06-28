@@ -19,7 +19,7 @@ description: Add a new paper note from a paper link (arXiv/abstract URL). Fetche
 1. `catalog.js` → `const curatedPaperCatalog = [ ... ]`: 논문 **metadata** 배열.
 2. `paper-notes-data.js` → `const importedPaperNotes = { ... }`: 제목(title)을 key로 하는 **note 본문** 객체.
 
-앱은 catalog의 각 논문에 대해 같은 `title`을 가진 note를 찾아 본문을 채운다. 따라서 **두 파일의 title 문자열은 정확히 동일**해야 한다. keyword·category·진행상태 배지는 title로부터 앱이 자동 추론하므로 skill에서 따로 넣지 않는다.
+앱은 catalog의 각 논문에 대해 같은 `title`을 가진 note를 찾아 본문을 채운다. 따라서 **두 파일의 title 문자열은 정확히 동일**해야 한다. 카테고리는 자동 추론하지 않고 사람이 직접 정하는 값이므로, 새 논문은 카테고리를 **비워 둔다**(`"categories": []`). 이후 앱의 "정보 수정"에서 또는 catalog 항목의 `categories`에 직접 넣어 분류한다.
 
 ## 절차
 
@@ -47,9 +47,12 @@ description: Add a new paper note from a paper link (arXiv/abstract URL). Fetche
        "year": <YEAR>,
        "venue": "<VENUE>",
        "doi": "<DOI>",
-       "url": "<URL>"
+       "url": "<URL>",
+       "categories": []
      },
    ```
+
+   `categories`는 사람이 나중에 직접 채울 자리이므로 **항상 빈 배열**로 둔다. (앱은 `categories[0]`을 주 카테고리, 나머지를 보조 카테고리로 쓴다.)
 
    바로 앞 항목 뒤에 쉼표가 오도록 유의한다(JSON이 아니라 JS 배열 리터럴이라 trailing comma는 허용되지만, 기존 스타일은 항목 사이에 쉼표를 둔다).
 
