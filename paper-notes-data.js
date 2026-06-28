@@ -1,5 +1,13 @@
 // Auto-generated from Notion "Research Paper Notes" export. Do not edit by hand.
 const importedPaperNotes = {
+  "PVI: Plug-in Visual Injection for Vision-Language-Action Models": {
+    "note": "",
+    "status": "not-yet"
+  },
+  "VLA-Adapter: An Effective Paradigm for Tiny-Scale Vision-Language-Action Model": {
+    "note": "",
+    "status": "not-yet"
+  },
   "Tactile Genesis: Exploring Tactile Sensors at Scale for Learning Dexterous Tasks": {
     "note": "",
     "status": "not-yet"

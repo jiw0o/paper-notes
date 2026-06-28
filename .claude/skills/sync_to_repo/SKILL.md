@@ -37,6 +37,8 @@ description: Pull changes made on the deployed GitHub Pages site back into the r
 
 4. **변경 확인.** `git status --short`와 `git --no-pager diff --stat`로 무엇이 바뀌는지 본다. 보통 `notes-snapshot.js` 한 파일만 바뀐다. 항목 수(이전 대비 증감)를 사용자에게 한 줄로 요약한다.
 
+   > 만약 `notes-snapshot.js` 외에 **코드 파일(app.js·styles.css·catalog.js 등)도 같이 바뀌어 있으면**(세션 중 작업해 둔 미커밋 변경), 스냅샷만 push하면 배포된 사이트가 구버전 코드로 새 데이터를 띄워 표시·동작이 어긋날 수 있다. 이 경우 **어디까지 함께 commit할지 사용자에게 확인**한다(보통 같은 기능 세트면 함께 push하는 게 일관적). 정체불명의 untracked 파일은 임의로 add하지 않는다.
+
 5. **commit + push.** GitHub Pages는 **deploy 브랜치(기본 `main`)에 push되어야 재배포**된다. 이 skill은 그 배포가 목적이므로 현재 브랜치(`main`)에 바로 commit/push 한다. 단, **4번 요약을 보여주고 사용자 확인을 받은 뒤** 실행한다.
 
    ```bash

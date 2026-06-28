@@ -20,9 +20,12 @@ description: Review an existing paper/study note by title for typos, factual err
 
 ## 데이터 위치 (배경)
 
-- paper 노트: `paper-notes-data.js`의 `importedPaperNotes` (title → `{note, status}`).
-- study 노트: `study-notes-data.js`의 `importedStudyNotes`.
-- 논문 metadata(원문 url 포함): `catalog.js`의 `curatedPaperCatalog`.
+노트 본문의 **현재 source of truth는 `notes-snapshot.js`**다(라이브 사이트에서 수정한 최신 내용이 sync로 여기에 들어옴). seed 파일은 스냅샷이 비었을 때의 폴백/초기값일 뿐이라, 그것만 보면 옛 내용을 검토할 수 있다.
+
+- 라이브 스냅샷: `notes-snapshot.js`의 `notesSnapshot.papers` (각 항목에 title·note·status·collection·tags·url·doi 등 전체 필드). `type:"topic"`이면 study, 아니면 paper.
+- 폴백 seed — paper 노트: `paper-notes-data.js`의 `importedPaperNotes`, study 노트: `study-notes-data.js`의 `importedStudyNotes`, 논문 metadata: `catalog.js`의 `curatedPaperCatalog`.
+
+아래 `extract_note.js`는 **스냅샷을 먼저** 보고 없으면 seed로 폴백하며, 출력 JSON의 `origin` 필드로 어디서 찾았는지(`snapshot`/`seed`) 알려준다.
 
 노트 본문은 Markdown이며 다음을 포함한다: `#`/`##`/`###` heading, `-` 리스트(들여쓰기로 중첩), KaTeX 수식(`$...$`, `$$...$$`), 다른 노트로의 `[[제목]]` 위키링크, 이미지 임베드(`![name](./assets/papers/image%20N.png)`).
 
@@ -34,7 +37,7 @@ description: Review an existing paper/study note by title for typos, factual err
    node .claude/skills/review_note/extract_note.js "<제목>" <scratchpad>/_review_note.md
    ```
 
-   stdout의 JSON에서 `found`, `key`(정규화된 정확한 제목), `source`(paper/study), `catalog.url`, `catalog.doi`를 얻는다. `found:false`면 비슷한 제목 후보를 grep으로 찾아 사용자에게 확인한다. 그다음 `noteFile`을 Read 도구로 읽는다(길면 페이지네이션).
+   stdout의 JSON에서 `found`, `origin`(snapshot/seed), `key`(정규화된 정확한 제목), `source`(paper/study), `catalog.url`, `catalog.doi`를 얻는다. `found:false`면 비슷한 제목 후보를 grep으로 찾아 사용자에게 확인한다. 그다음 `noteFile`을 Read 도구로 읽는다(길면 페이지네이션). `origin`은 5번 수정 적용 시 어느 파일을 고쳐야 하는지를 결정한다.
 
 2. **원문 확보 (사실관계 정밀 비교용).** 원문 **본문 전체**를 받아 대조한다.
    - paper 노트면 `catalog.url`/`doi`에서 arXiv id를 뽑아 **PDF를 내려받는다**:
@@ -71,7 +74,10 @@ description: Review an existing paper/study note by title for typos, factual err
 
    문제가 없는 축은 "이상 없음"으로 간단히 적는다. 과잉 지적을 피하고 실제로 가치 있는 항목만 든다.
 
-5. **(선택) 수정 적용.** 사용자가 고쳐달라고 하면, 해당 노트의 `note` 문자열을 `paper-notes-data.js`/`study-notes-data.js`에서 Edit으로 수정한다. 본문은 한 줄 JS 문자열(이스케이프된 `\n`)이므로, 교체할 조각도 파일에 저장된 형태(이스케이프 포함) 그대로 매칭해야 한다. 수정 후 `node --check <파일>`로 문법을 검증한다. 의미를 바꾸는 사실관계 수정은 적용 전에 사용자 확인을 받는다.
+5. **(선택) 수정 적용.** 사용자가 고쳐달라고 하면 `origin`에 따라 **고치는 파일이 다르다**:
+   - `origin:"snapshot"` (현재 대부분): 라이브 source of truth인 `notes-snapshot.js`의 해당 항목 `note` 문자열을 Edit으로 수정한다. ⚠️ 단, `notes-snapshot.js`는 `sync_to_repo`가 export로 통째로 덮어쓰므로, 같은 수정을 **라이브 사이트에도 반영(또는 수정 후 다시 export)** 하지 않으면 다음 sync 때 되돌아간다. 그래서 가벼운 오타 정도가 아니면, **사이트에서 직접 고친 뒤 export→sync** 흐름을 사용자에게 권하는 게 안전하다.
+   - `origin:"seed"` (스냅샷에 아직 없는 새 논문 등): `paper-notes-data.js`/`study-notes-data.js`의 `note`를 수정한다.
+   - 본문은 한 줄 JS 문자열(이스케이프된 `\n`)이므로, 교체할 조각도 파일에 저장된 형태(이스케이프 포함) 그대로 매칭해야 한다. 수정 후 `node --check <파일>`로 문법을 검증한다. 의미를 바꾸는 사실관계 수정은 적용 전에 사용자 확인을 받는다.
 
 ## 주의
 

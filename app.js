@@ -180,7 +180,9 @@ function applyImportedPaperNotes(items) {
 
 function mergeMissingCuratedPapers(items) {
   const additionTitles = new Set([
-    "T-Rex: Tactile-Reactive Dexterous Manipulation"
+    "PVI: Plug-in Visual Injection for Vision-Language-Action Models",
+    "T-Rex: Tactile-Reactive Dexterous Manipulation",
+    "VLA-Adapter: An Effective Paradigm for Tiny-Scale Vision-Language-Action Model"
   ]);
   const existingTitles = new Set(items.filter(item => !isTopic(item)).map(item => item.title));
   const usedIds = new Set(items.map(item => item.id));
@@ -230,15 +232,8 @@ function categoryColor(name) {
   return CATEGORY_PALETTE[h % CATEGORY_PALETTE.length];
 }
 function categoriesFor(item) {
-  const aliases = isTopic(item) ? {} : {
-    VLA: "Vision-Language-Action",
-    "World Model": "World Models",
-    Causality: "Causal RL",
-    Locomotion: "Loco-Manipulation"
-  };
   return [...new Set([item?.collection, ...(item?.tags || [])]
     .map(value => String(value || "").trim())
-    .map(value => aliases[value] || value)
     .filter(Boolean))];
 }
 function categoryBadges(item, limit = Infinity) {
@@ -264,6 +259,9 @@ function loadPapers() {
       // curated seeds (catalog.js + imported notes) as before.
       if (snapshot) {
         current = applyStudyTaxonomy(snapshot.papers);
+        // Inject catalog-only additions (papers added after this snapshot was
+        // taken) so they show up even on a fresh snapshot load.
+        current = mergeMissingCuratedPapers(current);
         [CATALOG_VERSION_KEY, CATALOG_ADDITIONS_KEY, TOPIC_CATALOG_KEY, STUDY_CONTENT_KEY, STUDY_TAXONOMY_KEY, PAPER_CONTENT_KEY]
           .forEach(key => localStorage.setItem(key, "applied"));
         localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
@@ -1055,6 +1053,11 @@ if (localStorage.getItem("aside-pref") === "collapsed") $("#reader-layout").clas
 $("#export-button").addEventListener("click", exportData);
 $("#import-button").addEventListener("click", () => $("#import-input").click());
 $("#import-input").addEventListener("change", event => { if (event.target.files[0]) importData(event.target.files[0]); event.target.value = ""; });
+$("#reset-button").addEventListener("click", () => {
+  if (!confirm("로컬 저장 데이터를 모두 지우고 최신 스냅샷으로 다시 불러옵니다.\n아직 내보내지(백업하지) 않은 변경분은 사라집니다. 계속할까요?")) return;
+  localStorage.clear();
+  location.reload();
+});
 document.addEventListener("keydown", event => {
   if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); $("#search-input").focus(); }
   if (event.key === "Escape") $(".sidebar").classList.remove("open");

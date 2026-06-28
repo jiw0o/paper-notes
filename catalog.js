@@ -32,7 +32,7 @@ const curatedPaperCatalog = [
     "venue": "Preprint (arXiv)",
     "doi": "arXiv:2606.12366",
     "url": "https://arxiv.org/abs/2606.12366",
-    "categories": ["VLA"]
+    "categories": ["VLA", "Training Recipe"]
   },
   {
     "title": "Being-H0.5: Scaling Human-Centric Robot Learning for Cross-Embodiment Generalization",
@@ -200,7 +200,7 @@ const curatedPaperCatalog = [
     "venue": "CoRL 2025",
     "doi": "arXiv:2505.12705",
     "url": "https://arxiv.org/abs/2505.12705",
-    "categories": ["World Model"]
+    "categories": ["World Model", "Training Recipe"]
   },
   {
     "title": "DSRL: Steering Your Diffusion Policy with Latent Space Reinforcement Learning",
@@ -431,7 +431,7 @@ const curatedPaperCatalog = [
     "venue": "ICRA 2025",
     "doi": "arXiv:2501.16664",
     "url": "https://arxiv.org/abs/2501.16664",
-    "categories": ["VLA", "Reinforcement Learning"]
+    "categories": ["VLA", "Reinforcement Learning", "Training Recipe"]
   },
   {
     "title": "LAPA: Latent Action Pretraining From Videos",
@@ -512,6 +512,27 @@ const curatedPaperCatalog = [
     "doi": "arXiv:2602.08602",
     "url": "https://arxiv.org/abs/2602.08602",
     "categories": ["Latent Action"]
+  },
+  {
+    "title": "PVI: Plug-in Visual Injection for Vision-Language-Action Models",
+    "authors": [
+      "Zezhou Zhang",
+      "Songxin Zhang",
+      "Xiao Xiong",
+      "Junjie Zhang",
+      "Zejian Xie",
+      "Jingyi Xi",
+      "Zunyao Mao",
+      "Zan Mao",
+      "Zhixin Mai",
+      "Zhuoyang Song",
+      "Jiaxing Zhang"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2603.12772",
+    "url": "https://arxiv.org/abs/2603.12772",
+    "categories": ["VLA"]
   },
   {
     "title": "RL Token: Bootstrapping Online RL with Vision-Language-Action Models",
@@ -637,7 +658,7 @@ const curatedPaperCatalog = [
     "venue": "ICLR 2026",
     "doi": "arXiv:2509.09674",
     "url": "https://arxiv.org/abs/2509.09674",
-    "categories": ["VLA", "Reinforcement Learning"]
+    "categories": ["VLA", "Reinforcement Learning", "Training Recipe"]
   },
   {
     "title": "Simulation Distillation: Pretraining World Models in Simulation for Rapid Real-World Adaptation",
@@ -702,7 +723,7 @@ const curatedPaperCatalog = [
     "venue": "NeurIPS 2024",
     "doi": "arXiv:2403.13438",
     "url": "https://arxiv.org/abs/2403.13438",
-    "categories": ["Spatial Reasoning", "VLM"]
+    "categories": ["Spatial Reasoning", "VLM", "In-Context Learning"]
   },
   {
     "title": "SpatialVLA: Exploring Spatial Representations for Visual-Language-Action Model",
@@ -778,7 +799,7 @@ const curatedPaperCatalog = [
     "venue": "Preprint (arXiv)",
     "doi": "arXiv:2606.17055",
     "url": "https://arxiv.org/abs/2606.17055",
-    "categories": ["Dexterous Manipulation"]
+    "categories": ["Dexterous Manipulation", "Tactile"]
   },
   {
     "title": "TICSA: Task-Independent Causal State Abstraction",
@@ -864,7 +885,33 @@ const curatedPaperCatalog = [
     "venue": "Preprint (arXiv)",
     "doi": "arXiv:2606.22332",
     "url": "https://arxiv.org/abs/2606.22332",
-    "categories": ["Dexterous Manipulation"]
+    "categories": ["Dexterous Manipulation", "Tactile"]
+  },
+  {
+    "title": "VLA-Adapter: An Effective Paradigm for Tiny-Scale Vision-Language-Action Model",
+    "authors": [
+      "Yihao Wang",
+      "Pengxiang Ding",
+      "Lingxiao Li",
+      "Can Cui",
+      "Zirui Ge",
+      "Xinyang Tong",
+      "Wenxuan Song",
+      "Han Zhao",
+      "Wei Zhao",
+      "Pengxu Hou",
+      "Siteng Huang",
+      "Yifan Tang",
+      "Wenhui Wang",
+      "Ru Zhang",
+      "Jianyi Liu",
+      "Donglin Wang"
+    ],
+    "year": 2025,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2509.09372",
+    "url": "https://arxiv.org/abs/2509.09372",
+    "categories": ["VLA", "VLM"]
   }
 ];
 

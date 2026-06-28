@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 // Usage: node extract_note.js "<note title>" [outFile]
-// Locates a note by title (exact, then fuzzy) across paper-notes-data.js and
-// study-notes-data.js, prints a JSON header (matched key, source, catalog
-// metadata) to stdout, and writes the raw note body to outFile (default:
-// ./_review_note.md) so it can be Read with pagination.
+// Locates a note by title (exact, then fuzzy). Prefers notes-snapshot.js (the
+// live source of truth once synced); falls back to the seed files
+// (paper-notes-data.js / study-notes-data.js + catalog.js) when the snapshot is
+// empty or doesn't contain the title. Prints a JSON header (matched key, source,
+// catalog metadata, origin) to stdout, and writes the raw note body to outFile
+// (default: ./_review_note.md) so it can be Read with pagination.
 
 const fs = require("fs");
 const path = require("path");
@@ -26,50 +28,80 @@ if (!title) {
   process.exit(2);
 }
 
-const paperNotes = load("paper-notes-data.js", "importedPaperNotes") || {};
-const studyNotes = load("study-notes-data.js", "importedStudyNotes") || {};
-const catalog = load("catalog.js", "curatedPaperCatalog") || [];
+const t = norm(title);
+const fuzzy = (k) => norm(k) === t || norm(k).includes(t) || t.includes(norm(k));
 
-function find(notes) {
-  if (notes[title]) return title;
-  const t = norm(title);
-  return Object.keys(notes).find(
-    (k) => norm(k) === t || norm(k).includes(t) || t.includes(norm(k))
-  );
+let result = null;
+
+// 1) Prefer the live snapshot (source of truth once synced).
+const snapshot = load("notes-snapshot.js", "notesSnapshot");
+const snapPapers = Array.isArray(snapshot && snapshot.papers) ? snapshot.papers : [];
+if (snapPapers.length) {
+  const hit =
+    snapPapers.find((p) => p.title === title) || snapPapers.find((p) => fuzzy(p.title));
+  if (hit) {
+    result = {
+      origin: "snapshot",
+      source: hit.type === "topic" ? "study" : "paper",
+      key: hit.title,
+      status: hit.status,
+      note: hit.note || "",
+      meta: { authors: hit.authors, year: hit.year, venue: hit.venue, doi: hit.doi, url: hit.url },
+    };
+  }
 }
 
-let source = "paper";
-let key = find(paperNotes);
-let note = key && paperNotes[key];
-if (!key) {
-  source = "study";
-  key = find(studyNotes);
-  note = key && studyNotes[key];
+// 2) Fall back to the seed files (e.g. a paper just added via add_note that is
+//    not in the snapshot yet).
+if (!result) {
+  const paperNotes = load("paper-notes-data.js", "importedPaperNotes") || {};
+  const studyNotes = load("study-notes-data.js", "importedStudyNotes") || {};
+  const catalog = load("catalog.js", "curatedPaperCatalog") || [];
+  const findKey = (notes) =>
+    notes[title] ? title : Object.keys(notes).find((k) => fuzzy(k));
+
+  let source = "paper";
+  let key = findKey(paperNotes);
+  let note = key && paperNotes[key];
+  if (!key) {
+    source = "study";
+    key = findKey(studyNotes);
+    note = key && studyNotes[key];
+  }
+  if (key) {
+    const meta =
+      catalog.find((p) => p.title === key) || catalog.find((p) => norm(p.title) === norm(key));
+    result = {
+      origin: "seed",
+      source,
+      key,
+      status: note.status,
+      note: note.note || "",
+      meta: meta
+        ? { authors: meta.authors, year: meta.year, venue: meta.venue, doi: meta.doi, url: meta.url }
+        : null,
+    };
+  }
 }
 
-if (!key) {
+if (!result) {
   console.log(JSON.stringify({ found: false, query: title }, null, 2));
   process.exit(1);
 }
 
-const meta =
-  catalog.find((p) => p.title === key) ||
-  catalog.find((p) => norm(p.title) === norm(key));
-
-fs.writeFileSync(outFile, note.note || "");
+fs.writeFileSync(outFile, result.note);
 
 console.log(
   JSON.stringify(
     {
       found: true,
-      source,
-      key,
-      status: note.status,
-      noteLength: (note.note || "").length,
+      origin: result.origin,
+      source: result.source,
+      key: result.key,
+      status: result.status,
+      noteLength: result.note.length,
       noteFile: outFile,
-      catalog: meta
-        ? { authors: meta.authors, year: meta.year, venue: meta.venue, doi: meta.doi, url: meta.url }
-        : null,
+      catalog: result.meta,
     },
     null,
     2

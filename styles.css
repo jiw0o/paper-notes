@@ -43,6 +43,8 @@ svg { width: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-l
 .sidebar-bottom { margin-top: auto; padding-top: 24px; border-top: 1px solid #dad8cf; }
 .utility-button { padding-block: 7px; font-size: 12px; }
 .utility-button svg { width: 16px; }
+.utility-danger { color: #a4503b; }
+.utility-danger:hover { color: #8f3f2c; background: rgba(164,80,59,.1); }
 
 .main { min-width: 0; }
 .topbar { height: 86px; padding: 0 48px; display: flex; align-items: center; gap: 18px; border-bottom: 1px solid var(--line); background: rgba(248,246,241,.88); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 10; }
