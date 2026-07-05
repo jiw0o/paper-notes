@@ -535,6 +535,19 @@ const curatedPaperCatalog = [
     "categories": ["VLA"]
   },
   {
+    "title": "Real-Time Execution of Action Chunking Flow Policies",
+    "authors": [
+      "Kevin Black",
+      "Manuel Y. Galliker",
+      "Sergey Levine"
+    ],
+    "year": 2025,
+    "venue": "NeurIPS 2025",
+    "doi": "arXiv:2506.07339",
+    "url": "https://arxiv.org/abs/2506.07339",
+    "categories": ["Diffusion Policy", "VLA"]
+  },
+  {
     "title": "RL Token: Bootstrapping Online RL with Vision-Language-Action Models",
     "authors": [
       "Charles Xu",
@@ -886,6 +899,20 @@ const curatedPaperCatalog = [
     "doi": "arXiv:2606.22332",
     "url": "https://arxiv.org/abs/2606.22332",
     "categories": ["Dexterous Manipulation", "Tactile"]
+  },
+  {
+    "title": "Training-Time Action Conditioning for Efficient Real-Time Chunking",
+    "authors": [
+      "Kevin Black",
+      "Allen Z. Ren",
+      "Michael Equi",
+      "Sergey Levine"
+    ],
+    "year": 2025,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2512.05964",
+    "url": "https://arxiv.org/abs/2512.05964",
+    "categories": ["VLA", "Training Recipe", "Diffusion Policy"]
   },
   {
     "title": "VLA-Adapter: An Effective Paradigm for Tiny-Scale Vision-Language-Action Model",

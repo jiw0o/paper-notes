@@ -35,6 +35,11 @@
           Study Notes
           <span class="nav-count" id="topic-count">0</span>
         </button>
+        <button class="nav-item" data-view="presentations">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>
+          Presentations
+          <span class="nav-count" id="presentation-count">0</span>
+        </button>
         <button class="nav-item" data-view="favorites">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg>
           Favorites
@@ -158,6 +163,7 @@
             <p class="reader-authors" id="reader-authors"></p>
             <div class="reader-actions">
               <a class="primary-button" id="paper-link" target="_blank" rel="noreferrer">논문 열기 ↗</a>
+              <button class="secondary-button" id="present-note-button">발표자료</button>
               <button class="secondary-button" id="edit-paper-button">정보 수정</button>
               <button class="icon-button favorite-large" id="reader-favorite" aria-label="즐겨찾기">☆</button>
             </div>
@@ -209,6 +215,23 @@
           <button class="aside-reopen" id="aside-reopen" aria-label="패널 열기">
             <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
+        </div>
+      </section>
+
+      <section class="presentation-view" id="presentation-view" hidden>
+        <button class="back-button" id="deck-back-button">← Presentations</button>
+        <div class="deck-header">
+          <div>
+            <p class="eyebrow">Presentation</p>
+            <h1 id="deck-title"></h1>
+          </div>
+          <div class="reader-actions">
+            <a class="primary-button" id="deck-open-tab" target="_blank" rel="noreferrer">새 탭에서 열기 ↗</a>
+            <button class="secondary-button" id="deck-open-note">원본 노트</button>
+          </div>
+        </div>
+        <div class="deck-frame-wrap">
+          <iframe id="deck-frame" title="발표자료" allow="fullscreen" referrerpolicy="no-referrer"></iframe>
         </div>
       </section>
     </main>
@@ -269,6 +292,7 @@
   <script src="catalog.js"></script>
   <script src="study-notes-data.js"></script>
   <script src="paper-notes-data.js"></script>
+  <script src="presentations.js"></script>
   <script src="notes-snapshot.js"></script>
   <script src="app.js"></script>
 </body>

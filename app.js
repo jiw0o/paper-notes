@@ -5,6 +5,7 @@ const TOPIC_CATALOG_KEY = "paper-notes-study-topics-v2";
 const STUDY_CONTENT_KEY = "paper-notes-imported-content-v4";
 const STUDY_TAXONOMY_KEY = "paper-notes-study-taxonomy-v1";
 const PAPER_CONTENT_KEY = "paper-notes-imported-paper-content-v3";
+const PRESENTATION_CATALOG_KEY = "paper-notes-presentations-v2";
 const COL_WIDTHS_KEY = "paper-notes-col-widths-v1";
 // Column width model. `flex: true` → no width, absorbs remaining space (always the
 // widest column, keeps the table at 100% so it never overflows). `pct` → default
@@ -182,7 +183,9 @@ function mergeMissingCuratedPapers(items) {
   const additionTitles = new Set([
     "EgoScale: Scaling Dexterous Manipulation with Diverse Egocentric Human Data",
     "PVI: Plug-in Visual Injection for Vision-Language-Action Models",
+    "Real-Time Execution of Action Chunking Flow Policies",
     "T-Rex: Tactile-Reactive Dexterous Manipulation",
+    "Training-Time Action Conditioning for Efficient Real-Time Chunking",
     "VLA-Adapter: An Effective Paradigm for Tiny-Scale Vision-Language-Action Model"
   ]);
   const existingTitles = new Set(items.filter(item => !isTopic(item)).map(item => item.title));
@@ -207,6 +210,28 @@ function mergeMissingCuratedPapers(items) {
     });
     existingTitles.add(template.title);
     usedIds.add(id);
+  });
+  return items;
+}
+
+// Attach presentation decks (from presentations.js → presentationCatalog) onto
+// the matching items. Keyed by item `id` (preferred) or exact `title`. The
+// resulting `presentation` field ({ path, title, updatedAt }) round-trips
+// losslessly through export → notes-snapshot.js, so once a deck is synced the
+// snapshot carries it and this seed step becomes a no-op for that item.
+function applyPresentations(items) {
+  if (typeof presentationCatalog === "undefined" || !presentationCatalog) return items;
+  const byId = new Map(items.map(item => [item.id, item]));
+  const byTitle = new Map(items.map(item => [item.title, item]));
+  Object.entries(presentationCatalog).forEach(([key, info]) => {
+    if (!info || !info.path) return;
+    const target = byId.get(key) || byTitle.get(key);
+    if (!target) return;
+    target.presentation = {
+      path: info.path,
+      title: info.title || target.title,
+      updatedAt: info.updatedAt || null
+    };
   });
   return items;
 }
@@ -263,7 +288,9 @@ function loadPapers() {
         // Inject catalog-only additions (papers added after this snapshot was
         // taken) so they show up even on a fresh snapshot load.
         current = mergeMissingCuratedPapers(current);
-        [CATALOG_VERSION_KEY, CATALOG_ADDITIONS_KEY, TOPIC_CATALOG_KEY, STUDY_CONTENT_KEY, STUDY_TAXONOMY_KEY, PAPER_CONTENT_KEY]
+        // Attach any decks defined in presentations.js not already in the snapshot.
+        current = applyPresentations(current);
+        [CATALOG_VERSION_KEY, CATALOG_ADDITIONS_KEY, TOPIC_CATALOG_KEY, STUDY_CONTENT_KEY, STUDY_TAXONOMY_KEY, PAPER_CONTENT_KEY, PRESENTATION_CATALOG_KEY]
           .forEach(key => localStorage.setItem(key, "applied"));
         localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
         return current;
@@ -294,12 +321,17 @@ function loadPapers() {
       current = applyImportedPaperNotes(current);
       localStorage.setItem(PAPER_CONTENT_KEY, "applied");
     }
+    if (!localStorage.getItem(PRESENTATION_CATALOG_KEY)) {
+      current = applyPresentations(current);
+      localStorage.setItem(PRESENTATION_CATALOG_KEY, "applied");
+    }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
     return current;
   } catch { return [...buildCuratedCatalog(), ...buildStudyTopics()]; }
 }
 
 function isTopic(item) { return item?.type === "topic"; }
+function hasPresentation(item) { return !!(item?.presentation && item.presentation.path); }
 function statusName(item) {
   return statusNames[item.status] || "—";
 }
@@ -420,7 +452,11 @@ function renderDashboard() {
 function renderSidebar() {
   $("#library-count").textContent = papers.filter(p => !isTopic(p)).length;
   $("#topic-count").textContent = papers.filter(isTopic).length;
-  const scopedItems = state.view === "topics" ? papers.filter(isTopic) : state.view === "library" ? papers.filter(p => !isTopic(p)) : papers;
+  $("#presentation-count").textContent = papers.filter(hasPresentation).length;
+  const scopedItems = state.view === "topics" ? papers.filter(isTopic)
+    : state.view === "library" ? papers.filter(p => !isTopic(p))
+    : state.view === "presentations" ? papers.filter(hasPresentation)
+    : papers;
   const counts = scopedItems.reduce((acc, paper) => {
     const categories = categoriesFor(paper);
     (categories.length ? categories : ["Unsorted"]).forEach(name => { acc[name] = (acc[name] || 0) + 1; });
@@ -441,7 +477,10 @@ function renderSidebar() {
 }
 
 function renderFilters() {
-  const scoped = state.view === "topics" ? papers.filter(isTopic) : state.view === "favorites" ? papers : papers.filter(p => !isTopic(p));
+  const scoped = state.view === "topics" ? papers.filter(isTopic)
+    : state.view === "favorites" ? papers
+    : state.view === "presentations" ? papers.filter(hasPresentation)
+    : papers.filter(p => !isTopic(p));
   const filters = [
     ["all", "전체", scoped.length],
     ["not-yet", "Not Yet", scoped.filter(p => p.status === "not-yet").length],
@@ -455,7 +494,10 @@ function renderFilters() {
 function filteredPapers() {
   const query = state.search.trim().toLowerCase();
   return papers.filter(paper => {
-    const matchesView = state.view === "topics" ? isTopic(paper) : state.view === "favorites" ? paper.favorite : !isTopic(paper);
+    const matchesView = state.view === "topics" ? isTopic(paper)
+      : state.view === "favorites" ? paper.favorite
+      : state.view === "presentations" ? hasPresentation(paper)
+      : !isTopic(paper);
     const matchesStatus = state.status === "all" || paper.status === state.status;
     const categories = categoriesFor(paper);
     const matchesCollection = state.collection === "all" || categories.includes(state.collection);
@@ -537,9 +579,10 @@ function renderPapers() {
   grid.innerHTML = state.layout === "table" ? (state.view === "topics" ? topicTableMarkup : paperTableMarkup) : cardMarkup;
   $("#empty-state").hidden = visible.length > 0;
 
+  const openFromList = id => state.view === "presentations" ? openPresentation(id) : openPaper(id);
   $$(".paper-card, .paper-row").forEach(card => {
-    card.addEventListener("click", event => { if (!event.target.closest("[data-favorite]")) openPaper(card.dataset.id); });
-    card.addEventListener("keydown", event => { if (event.key === "Enter") openPaper(card.dataset.id); });
+    card.addEventListener("click", event => { if (!event.target.closest("[data-favorite]")) openFromList(card.dataset.id); });
+    card.addEventListener("keydown", event => { if (event.key === "Enter") openFromList(card.dataset.id); });
   });
   $$('[data-favorite]').forEach(button => button.addEventListener("click", () => toggleFavorite(button.dataset.favorite)));
   setupColumnResize(grid);
@@ -607,6 +650,7 @@ function showLibrary() {
   $("#dashboard-view").hidden = true;
   $("#library-view").hidden = false;
   $("#reader-view").hidden = true;
+  $("#presentation-view").hidden = true;
   history.replaceState(null, "", location.pathname);
   if (state.view === "topics") {
     $("#view-eyebrow").textContent = "Concepts & methods";
@@ -616,6 +660,10 @@ function showLibrary() {
     $("#view-eyebrow").textContent = "Saved for later";
     $("#view-title").textContent = "Favorites";
     $("#view-subtitle").textContent = "";
+  } else if (state.view === "presentations") {
+    $("#view-eyebrow").textContent = "Slide decks";
+    $("#view-title").textContent = "Presentations";
+    $("#view-subtitle").textContent = "발표자료가 연결된 노트만 모아 봅니다. 카드를 누르면 슬라이드가 열립니다.";
   } else {
     $("#view-eyebrow").textContent = state.collection === "all" ? "Your research space" : "Collection";
     $("#view-title").textContent = state.collection === "all" ? "Paper library" : state.collection;
@@ -632,6 +680,7 @@ function showHome() {
   $("#dashboard-view").hidden = false;
   $("#library-view").hidden = true;
   $("#reader-view").hidden = true;
+  $("#presentation-view").hidden = true;
   history.replaceState(null, "", location.pathname);
   setActiveNav();
   renderDashboard();
@@ -647,8 +696,25 @@ function openPaper(id) {
   $("#dashboard-view").hidden = true;
   $("#library-view").hidden = true;
   $("#reader-view").hidden = false;
+  $("#presentation-view").hidden = true;
   history.replaceState(null, "", `#paper=${encodeURIComponent(id)}`);
   renderReader(paper);
+  window.scrollTo(0, 0);
+}
+
+function openPresentation(id) {
+  const paper = papers.find(p => p.id === id);
+  if (!paper || !hasPresentation(paper)) return;
+  state.currentId = id;
+  setActiveNav();
+  $("#dashboard-view").hidden = true;
+  $("#library-view").hidden = true;
+  $("#reader-view").hidden = true;
+  $("#presentation-view").hidden = false;
+  history.replaceState(null, "", `#deck=${encodeURIComponent(id)}`);
+  $("#deck-title").textContent = paper.presentation.title || paper.title;
+  $("#deck-open-tab").href = paper.presentation.path;
+  $("#deck-frame").src = paper.presentation.path;
   window.scrollTo(0, 0);
 }
 
@@ -663,6 +729,8 @@ function renderReader(paper) {
   const link = $("#paper-link");
   link.href = paper.url || "#";
   link.style.display = !isTopic(paper) && paper.url ? "inline-flex" : "none";
+  const presentButton = $("#present-note-button");
+  presentButton.style.display = hasPresentation(paper) ? "inline-flex" : "none";
   $("#reader-favorite").textContent = paper.favorite ? "★" : "☆";
   $("#reader-favorite").classList.toggle("active", paper.favorite);
   $("#note-editor").value = paper.note || "";
@@ -956,6 +1024,9 @@ $("#dialog-close").addEventListener("click", () => $("#paper-dialog").close());
 $("#dialog-cancel").addEventListener("click", () => $("#paper-dialog").close());
 $("#paper-form").addEventListener("submit", saveForm);
 $("#back-button").addEventListener("click", () => { showLibrary(); render(); });
+$("#present-note-button").addEventListener("click", () => openPresentation(state.currentId));
+$("#deck-back-button").addEventListener("click", () => { state.view = "presentations"; setActiveNav(); showLibrary(); render(); });
+$("#deck-open-note").addEventListener("click", () => openPaper(state.currentId));
 $("#reader-favorite").addEventListener("click", () => toggleFavorite(state.currentId));
 $("#edit-note-button").addEventListener("click", () => {
   const editing = !$("#note-editor-wrap").hidden;
@@ -1069,5 +1140,9 @@ document.addEventListener("click", () => {
 });
 
 render();
-const initialId = new URLSearchParams(location.hash.replace(/^#/, "")).get("paper");
-if (initialId && papers.some(p => p.id === initialId)) openPaper(initialId); else showHome();
+const initialHash = new URLSearchParams(location.hash.replace(/^#/, ""));
+const initialId = initialHash.get("paper");
+const initialDeck = initialHash.get("deck");
+if (initialDeck && papers.some(p => p.id === initialDeck && hasPresentation(p))) { state.view = "presentations"; openPresentation(initialDeck); }
+else if (initialId && papers.some(p => p.id === initialId)) openPaper(initialId);
+else showHome();
