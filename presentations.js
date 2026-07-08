@@ -21,15 +21,13 @@
 //     updatedAt: "2026-07-04"                 // optional ISO date
 //   }
 const presentationCatalog = {
- // Keyed by exact title (this note isn't in notes-snapshot.js yet, so its
- // index-based id can shift; matching by title is stable).
- "Real-Time Execution of Action Chunking Flow Policies": {
+ "paper-48": {
    path: "presentations/paper-31/index.html",
    title: "Real-Time Chunking (RTC) — NeurIPS 2025",
    updatedAt: "2026-07-05"
  },
- "Training-Time Action Conditioning for Efficient Real-Time Chunking": {
-   path: "presentations/paper-arxiv-2512-05964/index.html",
+ "paper-45": {
+   path: "presentations/paper-45/index.html",
    title: "Training-Time Action Conditioning (RTC) — Preprint 2025",
    updatedAt: "2026-07-07"
  }
