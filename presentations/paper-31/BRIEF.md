@@ -1,168 +1,302 @@
-# 발표자료 생성 요청: Real-Time Chunking (RTC) — **NeurIPS 2025 (Regenerated)**
+# Slide Deck Brief: Real-Time Chunking (RTC) — NeurIPS 2025
 
-> **구성 원칙:**
-> - **논리 전개는 노트(paper-notes) 구조를 그대로 따른다.** 노트에 정리된 디테일(수식·하위 항목·분류)은 **다 포함**.
-> - Title 다음 **배경 → 문제 → 해결책** 3장으로 high-level 종료. **해결책 슬라이드 = 논문의 contribution.**
-> - **실험 슬라이드는 "결과 → 결론"만.** figure가 근거. 아래 금지사항 엄수:
->   - ❌ legend 설명(색이 무엇인지 나열) ❌ "Also…" 같은 군더더기 접두어 ❌ benchmark/setup 설명.
->   - ✅ 딱 두 줄: **결과**(이 그림이 보여주는 것) → **결론**(그래서 무슨 의미).
-> - **제목은 짧고 실질적으로.** 군더더기·수식어 없는 명료한 제목.
-> - **논문 figure를 웬만하면 다 활용**(원 역할·번호 보존, 캡션에 Figure 번호). 노트는 서사·디테일의 출처.
-> - 맨 끝 **Discussion 1장**(핵심 통찰 + limitations). 한 슬라이드 = 한 메시지.
+## 1) Paper
+- **Title**: Real-Time Execution of Action Chunking Flow Policies
+- **Authors**: Kevin Black, Manuel Y. Galliker, Sergey Levine
+- **Venue / Year**: NeurIPS 2025 · arXiv:2506.07339
+- **URL**: https://arxiv.org/abs/2506.07339
+- **One-sentence thesis**: Action chunking policies can execute asynchronously in real time—without retraining—by using flow-matching inpainting to keep consecutive chunks continuous at their boundaries.
 
-## 1) 논문
-- 제목: **Real-Time Execution of Action Chunking Flow Policies** · Kevin Black, Manuel Y. Galliker, Sergey Levine · **NeurIPS 2025** · arXiv:2506.07339
-- 링크: https://arxiv.org/abs/2506.07339
+---
 
-## 2) 발표 맥락
-- 청중: 랩 그룹 미팅(robot learning / VLA). 길이: 슬라이드 **약 15장**, ~15분.
-- 언어: **English throughout.** 아래 Glossary의 논문 원어만 사용(노트 역번역 금지).
+## 2) Presentation Context
+- **Audience**: Lab group meeting (robot learning / VLA researchers)
+- **Length**: ~16 slides, ~15 min
+- **Language**: **English throughout.** Use exact paper terminology from the Glossary below. Do not back-translate Korean notes.
+- **Goal**: Audience understands (1) why naive asynchronous execution fails, (2) how ΠGDM + soft masking fixes it, (3) how strong the results are.
 
-## 2-bis) Glossary (paper terminology)
-- Real-Time Chunking (**RTC**) · asynchronous / synchronous / naive asynchronous execution
-- chunk-to-chunk discontinuity / **bifurcation** · **temporal ensembling (TE)** · **BID** (Bidirectional Decoding)
-- inpainting · **freezing** actions guaranteed to execute · flow matching (\(v_\pi\)) · **ΠGDM** guidance · weighted target error · **guidance weight clipping** \(\beta\)
-- **soft masking** / **hard masking** · **frozen** / **intermediate** / **freshly generated** region · guidance weight \(W\)
-- controller loop / background loop · minimum execution horizon \(s_{\min}\) · inference delay \(d\) · execution horizon \(s\) · prediction horizon \(H\) · feasibility \(d\le s\le H-d\)
-- **Kinetix** · bimanual manipulation · \(\pi_{0.5}\) · throughput · protective stop · out-of-distribution (OOD)
+---
 
-## 3) 디자인 방향
-- 16:9, clean academic, 여백 넉넉, **슬라이드당 시각자료 1개**, 한 슬라이드 한 메시지.
-- **논문 figure 우선**(크게, 캡션 "Figure N"). diagram은 figure 없는 개념 슬라이드에만.
-- 타이포: 제목 serif, 본문 sans, accent 1개(warm red). bullet 짧은 구, 문단 금지. 수식은 필요할 때 크게.
-- 출력: **HTML export**, index.html.
+## 2-bis) Glossary — use these exact terms
+| Concept | Paper term |
+|---|---|
+| 실시간 청킹 | Real-Time Chunking (**RTC**) |
+| 동기 실행 | synchronous execution |
+| 비동기 실행 | (naive) asynchronous execution |
+| 임시 앙상블 | temporal ensembling (**TE**) |
+| 양방향 디코딩 | **BID** (Bidirectional Decoding) |
+| 청크 경계 불연속 | chunk-to-chunk discontinuity / **bifurcation** |
+| 인페인팅 | inpainting |
+| 고정 구간 | **frozen** region |
+| 중간 구간 | **intermediate** region |
+| 새 생성 구간 | **freshly generated** region |
+| 가이던스 가중치 | guidance weight *W* |
+| 가이던스 클리핑 | guidance weight clipping *β* |
+| 추론 지연 | inference delay *d* |
+| 실행 호라이즌 | execution horizon *s* |
+| 예측 호라이즌 | prediction horizon *H* |
+| 최소 실행 호라이즌 | minimum execution horizon *s*_min |
+| 컨트롤러 루프 / 백그라운드 루프 | controller loop / background loop |
+| 가중 목표 오차 | weighted target error |
+| 모델명 | π₀.₅ |
 
-## 4) 업로드한 시각자료 (assets/) — 논문 원본 figure (최대한 활용)
-> **사용 금지**: `fig05.jpg`(썸네일), `fig09.png`(마스코트).
-- `fig01.jpg` — Figure 1 (top) 성냥 켜는 dynamic task. → S1 Title.
-- `fig01b_curves.png` — Figure 1 (bottom) position/velocity/**acceleration**(RTC 초록 smooth vs Sync 빨강 spike). → S4 해결책 / S15 Discussion.
-- `fig02.png` — Figure 2 chunk 간 **bifurcation**. → S3 문제.
-- `fig03.png` — Figure 3 guidance weight 3구간(frozen/intermediate/fresh). **핵심.** → S9 soft masking.
-- `fig04.png` — Figure 4 hard vs soft masking trajectory. → S10.
-- `fig05b_delay.png` — Figure 5 solve rate vs **inference delay**(12 env+avg). → S12 sim.
-- `fig05a_exechorizon.png` — Figure 5 avg solve rate vs **execution horizon**. → S13.
-- `fig08.png` — Figure 8/appendix soft-masking **schedule ablation**(exp decay 최고). → S14.
-- `fig08b_diffuser.png` — Figure 8 Diffuser inpainting 비교. → S14 보조(옵션).
-- `fig06b_throughput.png` — Figure 6 injected delay vs **throughput**. → S16 real.
-- `fig06.png` — Figure 6 (top) per-task cumulative progress. → S17.
-- `fig07.png` — Figure 7 guidance clipping \(\beta\) 분석. → S8 ΠGDM.
-- `fig07b_beta_ablation.png` — Figure 7 \(\beta\) ablation. → S8 보조(옵션).
+---
 
-## 5) 슬라이드 구성 — **노트 흐름 그대로**
+## 3) Design Direction
+- **Ratio**: 16:9, clean academic, generous whitespace
+- **One visual per content slide** (figure from paper or drawn diagram — never skip)
+- **Typography**: serif title, sans body, one accent color (warm red)
+- **Bullets**: 3–5 short phrases per slide, no full sentences, no paragraphs
+- **Math**: display only key equations, large and centered
+- **Export**: HTML (index.html), for iframe embedding
+
+---
+
+## 4) Assets — figures to upload (from `assets/` folder)
+
+> **Do NOT use**: `fig05.jpg` (composite thumbnail), `fig09.png` (mascot)
+
+| File | What it is | Assigned slide |
+|---|---|---|
+| `fig01.jpg` | Figure 1 top — match-lighting photo | S1 Title |
+| `fig01b_curves.png` | Figure 1 bottom — position/velocity/acceleration: RTC (green, smooth) vs Sync (red, spiky) | S5 & S16 |
+| `fig02.png` | Figure 2 — bifurcation: two chunks planning opposite paths around obstacle | S4 |
+| `fig03.png` | Figure 3 — the 3-region soft masking diagram (frozen / intermediate / fresh) | S9 |
+| `fig04.png` | Figure 4 — trajectory: hard masking vs soft masking | S10 |
+| `fig05b_delay.png` | Figure 5 right — inference delay vs solve rate (12 envs + avg) | S11 |
+| `fig05a_exechorizon.png` | Figure 5 bottom-left — execution horizon vs solve rate | S12 |
+| `fig08.png` | Figure 8 left — masking schedule ablation (exp decay wins) | S13 |
+| `fig06b_throughput.png` | Figure 6 right — injected delay vs average throughput | S14 |
+| `fig06.png` | Figure 6 top — per-task cumulative progress over controller steps | S15 |
+| `fig07.png` | Figure 7 — guidance clipping β: U-shaped coefficient curve + ablation | S8 |
+
+---
+
+## 5) Slide-by-Slide Plan
 
 ### S1. Title
-- 제목·저자·NeurIPS 2025 (arXiv:2506.07339). 시각자료: `fig01.jpg`.
-
---- Overview: 배경 → 문제 → 해결책 (노트 # Overview) ---
-
-### S2. Inference latency in real-time control  *(배경)*
-- Policy가 "생각"하는 동안에도 physical world는 계속 변한다.
-- Observation → action → controller 전달까지 **latency** 발생 → real-time control 성능 저하.
-- Action chunking은 temporally consistent action을 주지만 **latency 자체는 못 없앤다.**
-- 시각자료: **Diagram — latency timeline (D1)**.
-
-### S3. Discontinuity at chunk boundaries  *(문제)*
-- 새 chunk가 이전과 다른 strategy를 고르면 chunk 경계에서 **discontinuity(bifurcation)**.
-- Naive async는 OOD state·acceleration spike 유발.
-- 시각자료: `fig02.png`.
-
-### S4. Real-Time Chunking (RTC)  *(해결책 = contribution)*
-- 다음 chunk를 현재 chunk 실행과 **병렬 생성**(asynchronous).
-- inference 동안 확정 실행될 action은 **freeze**, 나머지는 이전 chunk로 **inpaint**해 continuity 유지.
-- **Training-free** — 어떤 diffusion/flow VLA에도 그대로. (+ Kinetix 12-task benchmark, throughput 대폭 향상 입증.)
-- 시각자료: `fig01b_curves.png`.
-
---- 기존 Action Chunk 실행 방식 (노트 # 기존 Action Chunk 실행 방식) ---
-
-### S5. How action chunks are executed
-- **Synchronous**: \(s\)개 실행 후 다음 chunk까지 정지 → position-control은 position hold, force-control은 그 개념도 없음.
-- **Naive asynchronous**: 실행 중 다음 chunk 생성 → 경계 discontinuity에 크게 취약(OOD, accel spike).
-- **Temporal ensemble (TE)**: overlap action 평균 → jerkiness↓지만 optimal은 아님.
-- 시각자료: **Diagram — three execution strategies (D2)**.
-
---- Method (노트 # Method) ---
-
-### S6. Inpainting via flow matching
-- Flow matching update: \(A_t^{\tau+1/n}=A_t^\tau+\tfrac1n v_\pi(A_t^\tau,o_t,\tau)\) (\(n\)=denoising steps, \(\tau\in[0,1]\)).
-- 예측 clean chunk: \(\hat A_t^1 = A_t^\tau+(1-\tau)v(A_t^\tau,o_t,\tau)\); overlap(이전 chunk)=inpainting target \(Y\).
-- 시각자료: **Diagram — inpainting target (D3)** (known \(Y\) 고정 / 나머지 생성).
-
-### S7. Training-free guidance (ΠGDM)
-- Velocity field에 gradient-based **guidance term** 추가:
-$$v_{\Pi\mathrm{GDM}} = v + \min\!\Big(\beta,\ \tfrac{1-\tau}{\tau r_\tau^2}\Big)(Y-\hat A_t^1)^\top\mathrm{diag}(W)\tfrac{\partial \hat A_t^1}{\partial A_t^\tau}$$
-- **Weighted target error** \(\mathcal L_{\text{guide}}=\tfrac12\lVert W^{1/2}(\hat A_t^1-Y)\rVert^2\) 에 대한 descent; \(r_\tau^2=\tfrac{(1-\tau)^2}{\tau^2+(1-\tau)^2}\).
-- **Guidance clipping**: upper bound \(\beta\)로 과도한 guidance 제한(\(\tau=0\)에서 finite).
-- 시각자료: `fig07.png` (clipping curve + β).
-
-### S8. Soft masking — frozen / intermediate / fresh
-- Hard masking의 한계: 앞 \(d\)개만 강제 → 나머지는 자유 생성.
-- Soft masking: guidance weight \(W\)로 3구간 — **frozen**(\(i<d\), weight 1) / **intermediate**(\(d\le i<H-s\), **exponential decay**) / **freshly generated**(0).
-- 가까운 미래는 강하게, 먼 미래는 약하게 맞춤.
-- 시각자료: `fig03.png`.
-
-### S9. Soft masking vs hard masking
-- Hard masking은 frozen region 경계 부근을 매끄럽게 잇지 못하고 급격한 방향 전환을 만듦.
-- Soft masking은 gradual transition으로 continuity 보장 및 trajectory 품질 향상.
-- 시각자료: `fig04.png`.
-
---- Experiment & Result (노트 # Experiment & Result) ---
-
-### S10. Simulated evaluation on Kinetix
-- Kinetix 12-task benchmark에서 naive async, synchronous, TE, BID와 비교 평가.
-- RTC와 BID만 빠른 업데이트의 이점(작은 \(s\)에서 높은 성능)을 온전히 활용.
-- 시각자료: `fig05a_exechorizon.png`.
-
-### S11. Performance under high latency
-- 다양한 inference delay (\(d\)) 조건에서 solve rate 측정.
-- RTC가 모든 baseline을 능가하며, 지연이 커질수록 성능 우위 확대. Soft masking이 성능 향상에 크게 기여.
-- 시각자료: `fig05b_delay.png`.
-
-### S12. Soft masking schedule ablation
-- 다양한 \(W\) 감쇄 schedule(exponential, linear 등) 중 **exponential decay**가 가장 좋은 성능을 보임.
-- 단순 오버라이트 방식의 Diffuser inpainting baseline 대비 guidance 기반 방식의 우수성 입증.
-- 시각자료: `fig08.png`.
-
-### S13. Real-world physical execution
-- Bimanual manipulation 및 match-lighting 등 dynamic task에서 실시간성 검증.
-- Naive async/TE는 지연 상황에서 protective stop 유발; RTC는 고지연에서도 안정적인 완주율을 기록.
-- 시각자료: `fig06b_throughput.png`.
-
-### S14. Quantitative progress & throughput
-- 시간 경과에 따른 태스크 누적 진행도(progress)와 평균 처리량(throughput) 비교.
-- RTC가 baseline 대비 월등히 높은 throughput과 압도적인 주행 안정성을 보여줌.
-- 시각자료: `fig06.png`.
-
-### S15. Discussion & Summary
-- **Training-free, zero-shot smooth asynchronous execution**의 성공적인 제안.
-- Limitations: Denoising step마다 backpropagation 연산 오버헤드($\Pi$GDM)가 존재.
-- Future work: Training-time에서 딜레이를 시뮬레이션하여 학습하는 방향성 제시.
-- 시각자료: `fig01b_curves.png`.
+- Title, authors, NeurIPS 2025 · arXiv:2506.07339
+- Visual: `fig01.jpg` — match-lighting photo, right side or faded background
+- Speaker note: "This robot lights a match with 300 ms of inference delay. That's what RTC enables."
 
 ---
 
-## 6) 다이어그램 스펙(직접 그릴 것)
-
-### D1. Latency Timeline (S2)
-- 가로축: Time $t$.
-- 위쪽 Line [Controller]: $o_t$ 관측 ➔ Action 실행 $A_{prev}$ ➔ 새 Action $A_{next}$ 수신 및 즉시 실행.
-- 아래쪽 Line [VLA Server]: $o_t$ 수신 ➔ **Thinking (Inference Delay $d$)** ➔ 새 Chunk $A_{next}$ 완성하여 Controller로 송신.
-- **주석**: "During the inference delay $d$, the physical world continues to move."
-
-### D2. Three Execution Strategies (S5)
-- **Synchronous**: [Run s steps] ➔ [Pause & Wait for next chunk] ➔ [Run next s steps]. (계단식 타임라인)
-- **Naive Asynchronous**: [Run continuous] ➔ [Switch to next chunk instantly] (경계면에 뾰족한 Acceleration Spike 표시).
-- **Temporal Ensemble (TE)**: [Run continuous with weighted average of overlapping chunks] (부드럽지만 optimal trajectory에서 이탈).
-
-### D3. Inpainting Target (S6)
-- 가로축: Action sequence index.
-- 0부터 $d-1$ 영역: **Frozen Region** (이미 실행되었거나 실행이 보장된 영역, Target $Y$와 일치하도록 고정).
-- $d$부터 $H-1$ 영역: **Freshly Generated Region** (Denoising을 통해 새로 생성될 영역).
-- 화살표: Frozen region의 마지막 action $A_{d-1}$과 새 chunk의 시작 부분이 매끄럽게 연결되는 흐름.
+### S2. The Inference Latency Problem
+- Policy "thinks" while the physical world keeps moving
+- Observation → inference → action delivery: **inference delay *d***
+- Action chunking gives temporally consistent actions — does **not** solve latency
+- Visual: **Diagram D1** — two-lane timeline: controller lane (top) vs VLA server lane (bottom), delay block shaded red
+- Speaker note: The gap between "policy finishes thinking" and "robot needs to act" is the core problem.
 
 ---
 
-## 7) 지켜야 할 것
-- 논문/노트에 **없는 수치·결과·주장 금지**. 불확실하면 비워 두고 표시.
-- 용어는 원어 유지. 캡션 출처는 해당 figure의 원 논문 그림 번호를 따른다.
+### S3. Three Existing Strategies — All Suboptimal
+- **Synchronous**: wait for next chunk → robot freezes / position-holds during inference
+- **Naive asynchronous**: switch chunks immediately → acceleration spike at boundary
+- **Temporal ensembling (TE)**: average overlapping chunks → smoother but suboptimal
+- Visual: **Diagram D2** — three horizontal swim lanes showing each strategy's chunk timeline
+- Speaker note: Each approach trades off latency for continuity. None get both.
 
+---
 
+### S4. The Core Problem: Bifurcation
+- New chunk may plan a **completely different strategy** than the current one
+- At the join point: robot jumps from $a_{10}$ to $a'_{11}$ → out-of-distribution acceleration spike
+- TE reduces the spike but produces poor intermediate actions
+- Visual: `fig02.png` — Figure 2: two chunks taking opposite paths around an obstacle
+- Speaker note: This is the failure mode. Two valid plans, one physical body, no bridge between them.
+
+---
+
+### S5. RTC: The Key Idea
+> Generate the next chunk **in parallel** while executing the current one, and use **inpainting** to enforce continuity at the boundary.
+
+- Actions guaranteed to execute before the new chunk arrives → **freeze** them as inpainting target
+- Constrain new chunk generation to agree with those committed actions
+- **Training-free** — works with any flow matching or diffusion VLA
+- Visual: `fig01b_curves.png` — Figure 1 bottom: RTC (green, smooth) vs Sync (red, spiky) position/velocity/acceleration
+
+---
+
+### S6. How RTC Runs: Two Concurrent Loops
+**Controller loop** (every control tick):
+- Pop next action from $A_\text{cur}$; save latest observation
+
+**Background loop** (runs concurrently):
+1. Wait until $t > s_\text{min}$
+2. Record actions executed so far → $s$; predict delay $d = \max(Q)$
+3. Run RTC generation (inpainting-guided denoising)
+4. Swap to new chunk, skipping the $t - s$ already-executed actions
+
+Feasibility constraint: $d \leq s \leq H - d$
+
+- Visual: **Diagram D3** — two swim-lane timelines (controller top, background bottom) running in parallel
+
+---
+
+### S7. Inpainting with Flow Matching
+Flow matching denoising step:
+$$A_t^{\tau+1/n} = A_t^\tau + \tfrac{1}{n}\,v_\pi(A_t^\tau,\,o_t,\,\tau)$$
+
+Predicted clean chunk at noise level $\tau$:
+$$\hat{A}_t^1 = A_t^\tau + (1-\tau)\,v(A_t^\tau,\,o_t,\,\tau)$$
+
+**Inpainting target** $Y$: overlap region from previous chunk
+
+Goal: steer $\hat{A}_t^1 \to Y$ on committed actions, free generation elsewhere
+
+- Visual: **Diagram D4** — one action chunk bar: frozen region (solid), intermediate (striped), fresh (white); bracket below marks $Y$
+
+---
+
+### S8. ΠGDM: Training-Free Guidance
+Augmented velocity field:
+$$v_{\Pi\text{GDM}} = v + \underbrace{\min\!\left(\beta,\;\tfrac{1-\tau}{\tau\,r_\tau^2}\right)}_{\text{coefficient}} \cdot \left(Y - \hat{A}_t^1\right)^\top \text{diag}(W)\;\tfrac{\partial \hat{A}_t^1}{\partial A_t^\tau}$$
+
+- Coefficient is **U-shaped** in $\tau$: strong early, relaxed mid, corrective late
+- **Clipping** $\beta$: prevents divergence near $\tau = 0$ with few denoising steps
+- $W$: per-action guidance weight (defined by soft masking)
+- Visual: `fig07.png` — Figure 7: U-shaped coefficient curve + β ablation showing no gain beyond β = 5
+
+---
+
+### S9. Soft Masking: Three Regions
+Hard masking only freezes the first $d$ actions → abrupt direction change just past the boundary
+
+**Soft masking** assigns guidance weight $W_i$ by region:
+
+| Region | Condition | Weight |
+|---|---|---|
+| **Frozen** | $i < d$ | 1 — full guidance |
+| **Intermediate** | $d \leq i < H-s$ | exponential decay toward 0 |
+| **Freshly generated** | $i \geq H-s$ | 0 — free generation |
+
+Near future: lock tightly. Far future: generate freely.
+
+- Visual: `fig03.png` — Figure 3: the 3-region diagram with labeled guidance weights
+
+---
+
+### S10. Soft vs Hard Masking
+- Hard masking: constraint ends sharply at $d$ → kink in the trajectory at the boundary
+- Soft masking: gradual transition via exponential decay → smooth continuation
+- Visual: `fig04.png` — Figure 4: trajectory comparison (hard left, soft right)
+- Speaker note: The kink in hard masking is small but causes jerk — exactly what we're trying to avoid.
+
+---
+
+### S11. Simulation: Kinetix Benchmark
+- 12 dynamic tasks (throwing, catching, balancing) — force-based control, no position hold
+- Baselines: naive async, temporal ensembling, BID
+- **RTC outperforms all baselines at every delay level**
+- Performance gap widens as inference delay *d* increases
+- Soft masking adds substantial lift over hard masking
+- Visual: `fig05b_delay.png` — Figure 5 right: inference delay *d* vs solve rate (all 12 envs + average)
+
+---
+
+### S12. Execution Horizon: Shorter Is Better with RTC
+- Smaller $s$ = more frequent chunk updates = higher reactivity
+- **Only RTC and BID** gain from smaller $s$ — they maintain continuity across boundaries
+- Naive async and TE **degrade** as $s$ shrinks — boundary discontinuity gets triggered more often
+- Visual: `fig05a_exechorizon.png` — Figure 5 bottom-left: execution horizon $s$ vs average solve rate
+
+---
+
+### S13. Ablation: Masking Schedule
+- Compared: exponential decay, linear decay, constant (hard masking), Diffuser inpainting
+- **Exponential decay best overall; linear decay close**
+- Hard masking significantly worse
+- Even the simpler Diffuser overwrite helps — but guidance-based ΠGDM wins
+- Visual: `fig08.png` — Figure 8: schedule ablation (left) + Diffuser comparison (right)
+
+---
+
+### S14. Real World: Bimanual Manipulation (π₀.₅)
+- Tasks: plug Ethernet, folding, dishes, match-lighting — bimanual gripper setup
+- $H=50$, $\Delta t = 20\text{ ms}$, $n=5$ denoising steps; injected delays: +0/+100/+200 ms
+- **RTC: highest throughput at every delay level**
+- **TE (sparse/dense): triggers robot protective stop at +100 ms and +200 ms** — cannot run
+- Sync: throughput degrades linearly with delay
+- Visual: `fig06b_throughput.png` — Figure 6 right: injected delay vs average throughput (±1 SEM bars)
+
+---
+
+### S15. Real World: Per-Task Progress
+- Retry-possible tasks (Plug, Folding, Dishes): RTC reaches the same endpoint faster, fewer retries
+- Precision-sensitive tasks: RTC's smoothness directly raises success rate
+- Across all tasks: RTC completes more progress within the episode time budget
+- Visual: `fig06.png` — Figure 6 top: per-task cumulative progress vs controller steps (aggregated across delays)
+
+---
+
+### S16. Takeaways
+- **RTC does not speed up inference** — it parallelizes inference with execution so the robot never waits
+- **ΠGDM + soft masking** is the key: exponential decay in the intermediate region is what makes boundaries smooth
+- **Training-free**: drop into any flow/diffusion VLA; the only cost is backprop through ΠGDM each denoising step
+- Future direction: training-time RTC (condition on action prefix during training) eliminates ΠGDM overhead entirely
+- Visual: `fig01b_curves.png` — the smooth green line vs spiky red line is the paper in one image
+
+---
+
+## 6) Diagram Specs
+
+### D1 — Inference Latency Timeline (S2)
+Two horizontal swim-lane timelines, stacked vertically, sharing a time axis at the bottom.
+
+**Top lane — Controller**:
+`[observe o_t]` → `[execute A_cur actions…]` → `[receive A_next]` → `[execute A_next…]`
+
+**Bottom lane — VLA Server**:
+`[receive o_t]` → `[▓▓▓▓▓ INFERENCE DELAY d ▓▓▓▓▓]` (shaded red) → `[send A_next]`
+
+- Vertical dashed line from "observe o_t" to "receive o_t" to synchronize the two lanes
+- Another dashed line from "send A_next" to "receive A_next"
+- Annotation on the red block: *"The physical world doesn't pause"*
+- Label: left→right time axis
+
+### D2 — Three Execution Strategies (S3)
+Three rows, each a horizontal timeline. Time axis at bottom.
+
+**Row 1 — Synchronous**:
+`[chunk 1: s steps]` → `[⏸ PAUSE (inference)]` → `[chunk 2: s steps]`
+Annotation: *"robot freezes"*
+
+**Row 2 — Naive Asynchronous**:
+`[chunk 1: continuous execution]` → sharp red jagged spike at join point → `[chunk 2: continues]`
+Annotation: *"OOD acceleration spike"*
+
+**Row 3 — Temporal Ensembling**:
+`[chunk 1]` and `[chunk 2]` overlap in a blended gradient region
+Annotation: *"smoother, but suboptimal trajectory"*
+
+### D3 — RTC Two Loops (S6)
+Two horizontal swim-lane timelines.
+
+**Top — Controller Loop** (repeating, fast):
+`[pop action]` → `[execute]` → `[save obs]` → `[pop action]` → `[execute]` → `…`
+
+**Bottom — Background Loop** (slower, starts concurrently):
+`[wait s > s_min]` → `[record s, predict d]` → `[▓▓▓ RTC GENERATE ▓▓▓]` (red) → `[swap chunk]`
+
+- Dotted arrow from "save obs" → "Background Loop" labeled *"latest observation"*
+- Dotted arrow from "swap chunk" → Controller Loop labeled *"A_new ready"*
+- The two loops run simultaneously — no pausing between them
+
+### D4 — Inpainting Target Y (S7)
+One horizontal bar representing the action chunk of length $H$.
+
+- Left block `[0 … d-1]`: **solid red** — labeled **"Frozen"** (will execute before new chunk arrives)
+- Middle block `[d … H-s-1]`: **diagonal stripes** — labeled **"Intermediate"** (soft constraint, exponential decay)
+- Right block `[H-s … H-1]`: **white/empty** — labeled **"Freshly generated"** (no constraint)
+- Bracket below the frozen + intermediate region: "Inpainting target *Y*"
+- Vertical dashed line at $d$: label *"inference completes"*
+- Vertical dashed line at $H-s$: label *"end of previous chunk"*
+
+---
+
+## 7) Rules
+- **No numbers or claims not in the note or paper.** If uncertain, flag with `[?]`.
+- Caption every figure with its paper Figure number (e.g., *"Figure 3"*).
+- Use only Glossary terminology — no back-translation.
+- Export as HTML (`index.html`), self-contained or with relative asset paths.
