@@ -67,8 +67,15 @@ svg { width: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-l
 .deck-header h1 { font: 500 clamp(30px, 3.4vw, 48px)/1.05 Georgia, "Times New Roman", serif; letter-spacing: -.04em; margin: 6px 0 0; }
 .deck-header .eyebrow { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .deck-header .reader-actions { margin: 0; }
-.deck-frame-wrap { border: 1px solid #e7e0d4; border-radius: 16px; overflow: hidden; background: #efeae0; box-shadow: 0 18px 44px rgba(60,48,36,.10); }
-.deck-frame-wrap iframe { display: block; width: 100%; height: min(72vh, 760px); border: 0; }
+.deck-frame-wrap { position: relative; border: 1px solid #e7e0d4; border-radius: 16px; overflow: hidden; background: #efeae0; box-shadow: 0 18px 44px rgba(60,48,36,.10); }
+.deck-frame-wrap iframe { display: block; width: 100%; height: min(72vh, 760px); border: 0; transform-origin: 0 0; }
+.deck-frame-wrap:fullscreen { border: 0; border-radius: 0; background: #000; }
+.deck-frame-wrap:fullscreen iframe { height: 100%; }
+.deck-zoom-controls { position: absolute; left: 14px; bottom: 14px; z-index: 5; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 12px; background: rgba(20,20,22,.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 4px 18px rgba(0,0,0,.32); opacity: .45; transition: opacity .15s; }
+.deck-zoom-controls:hover { opacity: 1; }
+.deck-zoom-controls button { border: 0; background: transparent; color: #fff; width: 30px; height: 30px; border-radius: 8px; font: 600 16px/1 -apple-system, BlinkMacSystemFont, sans-serif; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.deck-zoom-controls button:hover { background: rgba(255,255,255,.16); }
+.deck-zoom-controls .zoom-level { color: #fff; font: 600 11px/1 -apple-system, BlinkMacSystemFont, sans-serif; min-width: 42px; text-align: center; cursor: default; }
 @media (max-width: 760px) { .deck-frame-wrap iframe { height: 64vh; } }
 .dashboard { padding: 54px 48px 90px; max-width: 1450px; margin: 0 auto; }
 .dashboard-header { display: flex; justify-content: space-between; align-items: end; margin-bottom: 28px; }

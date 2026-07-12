@@ -186,7 +186,8 @@ function mergeMissingCuratedPapers(items) {
    "Real-Time Execution of Action Chunking Flow Policies",
    "T-Rex: Tactile-Reactive Dexterous Manipulation",
    "Training-Time Action Conditioning for Efficient Real-Time Chunking",
-   "VLA-Adapter: An Effective Paradigm for Tiny-Scale Vision-Language-Action Model"
+   "VLA-Adapter: An Effective Paradigm for Tiny-Scale Vision-Language-Action Model",
+   "VT-WAM: Visual-Tactile World Action Model for Contact-Rich Manipulation"
  ]);
  const existingTitles = new Set(items.filter(item => !isTopic(item)).map(item => item.title));
  const usedIds = new Set(items.map(item => item.id));
@@ -712,6 +713,9 @@ function openPresentation(id) {
  $("#presentation-view").hidden = false;
  history.replaceState(null, "", `#deck=${encodeURIComponent(id)}`);
  $("#deck-title").textContent = paper.presentation.title || paper.title;
+ deckZoom.scale = 1; deckZoom.x = 0; deckZoom.y = 0;
+ $("#deck-frame").style.transform = "";
+ $("#deck-zoom-level").textContent = "100%";
  $("#deck-frame").src = paper.presentation.path;
  window.scrollTo(0, 0);
 }
@@ -1026,14 +1030,104 @@ $("#present-note-button").addEventListener("click", () => openPresentation(state
 $("#deck-back-button").addEventListener("click", () => { state.view = "presentations"; setActiveNav(); showLibrary(); render(); });
 $("#deck-open-note").addEventListener("click", () => openPaper(state.currentId));
 $("#deck-fullscreen").addEventListener("click", () => {
- const frame = $("#deck-frame");
- if (frame.requestFullscreen) {
-   frame.requestFullscreen();
- } else if (frame.webkitRequestFullscreen) {
-   frame.webkitRequestFullscreen();
- } else if (frame.msRequestFullscreen) {
-   frame.msRequestFullscreen();
+ // Fullscreen the wrapper (not the iframe) so the zoom controls stay visible.
+ const wrap = $(".deck-frame-wrap");
+ if (wrap.requestFullscreen) {
+   wrap.requestFullscreen();
+ } else if (wrap.webkitRequestFullscreen) {
+   wrap.webkitRequestFullscreen();
+ } else if (wrap.msRequestFullscreen) {
+   wrap.msRequestFullscreen();
  }
+});
+
+// --- Deck zoom: 화면 일부 확대/패닝 (Ctrl+휠·핀치, +/−/0 키, 확대 중 드래그 이동) ---
+const deckZoom = { scale: 1, x: 0, y: 0 };
+const DECK_ZOOM_MAX = 5;
+
+function applyDeckZoom() {
+ const wrap = $(".deck-frame-wrap");
+ const frame = $("#deck-frame");
+ if (deckZoom.scale <= 1.001) { deckZoom.scale = 1; deckZoom.x = 0; deckZoom.y = 0; }
+ // Keep the content covering the wrapper: pan ∈ [size·(1−scale), 0] per axis.
+ deckZoom.x = Math.min(0, Math.max(wrap.clientWidth * (1 - deckZoom.scale), deckZoom.x));
+ deckZoom.y = Math.min(0, Math.max(wrap.clientHeight * (1 - deckZoom.scale), deckZoom.y));
+ frame.style.transform = deckZoom.scale === 1 ? "" : `translate(${deckZoom.x}px, ${deckZoom.y}px) scale(${deckZoom.scale})`;
+ $("#deck-zoom-level").textContent = `${Math.round(deckZoom.scale * 100)}%`;
+}
+
+// cx/cy는 iframe 내부(콘텐츠) 좌표 기준 확대 중심. 생략하면 현재 화면 중앙 유지.
+function setDeckZoom(scale, cx, cy) {
+ const next = Math.min(DECK_ZOOM_MAX, Math.max(1, scale));
+ if (cx == null) {
+   const wrap = $(".deck-frame-wrap");
+   cx = (wrap.clientWidth / 2 - deckZoom.x) / deckZoom.scale;
+   cy = (wrap.clientHeight / 2 - deckZoom.y) / deckZoom.scale;
+ }
+ deckZoom.x += cx * (deckZoom.scale - next);
+ deckZoom.y += cy * (deckZoom.scale - next);
+ deckZoom.scale = next;
+ applyDeckZoom();
+}
+
+function handleDeckZoomKey(e) {
+ if (e.ctrlKey || e.metaKey || e.altKey) return false;
+ if (e.key === "+" || e.key === "=") setDeckZoom(deckZoom.scale * 1.25);
+ else if (e.key === "-" || e.key === "_") setDeckZoom(deckZoom.scale / 1.25);
+ else if (e.key === "0") setDeckZoom(1);
+ else return false;
+ return true;
+}
+
+$("#deck-zoom-in").addEventListener("click", () => setDeckZoom(deckZoom.scale * 1.25));
+$("#deck-zoom-out").addEventListener("click", () => setDeckZoom(deckZoom.scale / 1.25));
+$("#deck-zoom-reset").addEventListener("click", () => setDeckZoom(1));
+window.addEventListener("resize", () => { if (!$("#presentation-view").hidden) applyDeckZoom(); });
+document.addEventListener("fullscreenchange", () => { if (!$("#presentation-view").hidden) applyDeckZoom(); });
+document.addEventListener("keydown", e => {
+ if ($("#presentation-view").hidden) return;
+ if (e.target.closest && e.target.closest("input, textarea, select")) return;
+ if (handleDeckZoomKey(e)) e.preventDefault();
+});
+
+// The deck is same-origin, so zoom gestures are captured inside the iframe itself
+// (events there never bubble to this document). Window listeners survive the
+// bundled decks' document replacement.
+$("#deck-frame").addEventListener("load", () => {
+ const win = $("#deck-frame").contentWindow;
+ if (!win || win.__deckZoomWired) return;
+ win.__deckZoomWired = true;
+
+ win.addEventListener("wheel", e => {
+   if (!e.ctrlKey && !e.metaKey) return;
+   e.preventDefault();
+   setDeckZoom(deckZoom.scale * Math.exp(-e.deltaY * 0.0022), e.clientX, e.clientY);
+ }, { passive: false, capture: true });
+
+ win.addEventListener("keydown", e => { if (handleDeckZoomKey(e)) e.preventDefault(); });
+
+ // Drag-to-pan while zoomed. Inner clientX/Y are content coords, so the grabbed
+ // point (drag.cx/cy) is pinned under the cursor on every move.
+ let drag = null, swallowClick = false;
+ win.addEventListener("mousedown", e => {
+   if (deckZoom.scale === 1 || e.button !== 0) return;
+   drag = { cx: e.clientX, cy: e.clientY, sx: e.screenX, sy: e.screenY, moved: false };
+ }, true);
+ win.addEventListener("mousemove", e => {
+   if (!drag) return;
+   if (Math.abs(e.screenX - drag.sx) + Math.abs(e.screenY - drag.sy) > 4) drag.moved = true;
+   if (!drag.moved) return;
+   deckZoom.x += (e.clientX - drag.cx) * deckZoom.scale;
+   deckZoom.y += (e.clientY - drag.cy) * deckZoom.scale;
+   applyDeckZoom();
+   e.preventDefault();
+ }, true);
+ win.addEventListener("mouseup", () => { swallowClick = !!(drag && drag.moved); drag = null; }, true);
+ win.addEventListener("blur", () => { drag = null; });
+ // A pan gesture must not also advance the deck as a click.
+ win.addEventListener("click", e => {
+   if (swallowClick) { swallowClick = false; e.stopImmediatePropagation(); e.preventDefault(); }
+ }, true);
 });
 
 // Inject shared presenter tools (collapsible page-list rail + laser pointer) into the deck frame upon load.

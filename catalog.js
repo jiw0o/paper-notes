@@ -964,6 +964,26 @@ const curatedPaperCatalog = [
     "doi": "arXiv:2602.16710",
     "url": "https://arxiv.org/abs/2602.16710",
     "categories": ["Dexterous Manipulation", "VLA", "Training Recipe"]
+  },
+  {
+    "title": "VT-WAM: Visual-Tactile World Action Model for Contact-Rich Manipulation",
+    "authors": [
+      "Shuai Tian",
+      "Yupeng Zheng",
+      "Yuhang Zheng",
+      "Songen Gu",
+      "Yujie Zang",
+      "Yuxing Qin",
+      "Weize Li",
+      "Haoran Li",
+      "Wenchao Ding",
+      "Dongbin Zhao"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2607.02503",
+    "url": "https://arxiv.org/abs/2607.02503",
+    "categories": ["WAM", "Tactile"]
   }
 ];
 
