@@ -1023,5 +1023,6 @@ const studyTopicCatalog = [
   { title: "GR00T-N1", collection: "VLA", tags: [] },
   { title: "GR00T-N1.5", collection: "VLA", tags: [] },
   { title: "GR00T-N1.6", collection: "VLA", tags: [] },
-  { title: "Cosmos 3", collection: "Generative AI", tags: ["Representation Learning"] }
+  { title: "Cosmos 3", collection: "Generative AI", tags: ["Representation Learning"] },
+  { title: "TTT: Test-Time Training", collection: "Transformer", tags: ["Representation Learning"] }
 ];
