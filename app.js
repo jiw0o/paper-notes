@@ -184,6 +184,7 @@ function mergeMissingCuratedPapers(items) {
    "EgoScale: Scaling Dexterous Manipulation with Diverse Egocentric Human Data",
    "PVI: Plug-in Visual Injection for Vision-Language-Action Models",
    "Real-Time Execution of Action Chunking Flow Policies",
+  "RoboTTT: Context Scaling for Robot Policies",
    "T-Rex: Tactile-Reactive Dexterous Manipulation",
    "Training-Time Action Conditioning for Efficient Real-Time Chunking",
    "VLA-Adapter: An Effective Paradigm for Tiny-Scale Vision-Language-Action Model",

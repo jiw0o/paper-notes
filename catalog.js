@@ -643,6 +643,27 @@ const curatedPaperCatalog = [
     "categories": ["VLA", "Reinforcement Learning"]
   },
   {
+    "title": "RoboTTT: Context Scaling for Robot Policies",
+    "authors": [
+      "Yunfan Jiang",
+      "Yevgen Chebotar",
+      "Ruijie Zheng",
+      "Fengyuan Hu",
+      "Yunhao Ge",
+      "Jimmy Wu",
+      "Tianyuan Dai",
+      "Scott Reed",
+      "Li Fei-Fei",
+      "Yuke Zhu",
+      "Linxi \"Jim\" Fan"
+    ],
+    "year": 2026,
+    "venue": "Preprint (arXiv)",
+    "doi": "arXiv:2607.15275",
+    "url": "https://arxiv.org/abs/2607.15275",
+    "categories": ["VLA", "In-Context Learning", "Training Recipe"]
+  },
+  {
     "title": "SimpleVLA-RL: Scaling VLA Training via Reinforcement Learning",
     "authors": [
       "Haozhan Li",
